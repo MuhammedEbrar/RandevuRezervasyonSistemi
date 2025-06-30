@@ -62,3 +62,5 @@ git clone git@github.com:MuhammedEbrar/RandevuRezervasyonSistemi.git
 
 # Klonlanan projenin dizinine geçin
 cd RandevuRezervasyonSistemi
+
+#Bu satır iskender tarafından düzenlenmiştir.
