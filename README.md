@@ -1,5 +1,6 @@
 # RandevuRezervasyonSistemi
 Bu 4 kişilik bir stajyer ekibin staj süresince geliştirmeye başladığı bir projedir.
+<<<<<<< HEAD
 
 # Randevu ve Kiralama Platformu
 
@@ -63,4 +64,5 @@ git clone git@github.com:MuhammedEbrar/RandevuRezervasyonSistemi.git
 # Klonlanan projenin dizinine geçin
 cd RandevuRezervasyonSistemi
 
-#Bu satır iskender tarafından düzenlenmiştir.
+=======
+
