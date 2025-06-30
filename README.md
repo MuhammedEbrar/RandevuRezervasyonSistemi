@@ -63,12 +63,3 @@ git clone git@github.com:MuhammedEbrar/RandevuRezervasyonSistemi.git
 
 # Klonlanan projenin dizinine geçin
 cd RandevuRezervasyonSistemi
-
-<<<<<<< HEAD
-=======
-
-=======
-#Bu satır iskender tarafından düzenlenmiştir.
-=======
->>>>>>> parent of be1fce3 (README.md güncellendi)
->>>>>>> 4aa30b29255e7b52112a0199764c8b3263c63952
