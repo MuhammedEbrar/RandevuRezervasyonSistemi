@@ -8,6 +8,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from uuid import UUID
 
+from backend.core.settings import ALGORITHM, JWT_SECRET_KEY
 from config import settings # settings objesini import ediyoruz
 from database import get_db
 from crud import user as crud_user # user crud modülünü import ediyoruz
@@ -41,22 +42,8 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/auth/login") # Login endpo
 # JWT token'ı doğrulama ve veri alma
 def verify_token(token: str, credentials_exception: HTTPException) -> dict:
     try:
-        payload = jwt.decode(token, settings.JWT_SECRET_KEY, algorithms=[settings.ALGORITHM])
-        user_id_str: Optional[str] = payload.get("user_id")
-        email: Optional[str] = payload.get("sub") # 'sub' genellikle kullanıcının benzersiz tanımlayıcısıdır (örn: e-posta)
-        user_role_str: Optional[str] = payload.get("role")
-
-        if user_id_str is None or email is None or user_role_str is None:
-            raise credentials_exception
-
-        # UUID'yi doğrulamak için
-        try:
-            user_id = UUID(user_id_str)
-            user_role = UserRole(user_role_str) # String'i Enum'a çevir
-        except ValueError:
-            raise credentials_exception
-
-        return {"user_id": user_id, "email": email, "role": user_role}
+        payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=[ALGORITHM])
+        return payload 
     except JWTError:
         raise credentials_exception
 
@@ -68,26 +55,34 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
         headers={"WWW-Authenticate": "Bearer"},
     )
 
-    # Token'ı doğrulayarak payload'ı alıyoruz
-    payload = verify_token(token, credentials_exception)
-    user_id = payload.get("user_id") # Payload'dan user_id'yi al
+    payload = verify_token(token, credentials_exception) # Ham payload'ı alıyoruz
 
-    if user_id is None:
+    user_id_str: Optional[str] = payload.get("sub") # JWT standartlarında subject (kullanıcı kimliği) için 'sub' kullanılır
+
+    if user_id_str is None: # veya diğer gerekli alanlar eksikse
         raise credentials_exception
+
+    # UUID'yi doğrulamak için
+    try:
+        user_id = UUID(user_id_str)
+    except ValueError:
+        raise credentials_exception # Geçersiz UUID formatı
 
     # Veritabanından kullanıcıyı çekiyoruz
     db_user = crud_user.get_user_by_id(db, user_id)
     if db_user is None:
         raise credentials_exception
-    return db_user
+
+    return db_user # Doğrudan veritabanından çekilmiş User objesini döndür
 
 # Rol bazlı yetkilendirme için helper fonksiyonu
-def check_user_role(required_role: UserRole):
-    def role_checker(current_user: User = Depends(get_current_user)):
-        if current_user.role != required_role:
+def check_user_role(required_roles: list[UserRole]): # Artık bir UserRole listesi bekliyor
+    def role_checker(current_user: User = Depends(get_current_user)): # current_user bir User objesi
+
+        if current_user.role not in required_roles:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Bu işlem için {required_role.value} yetkisi gereklidir."
+                detail=f"Bu işlem için yetki gerekli. Gerekli roller: {[role.value for role in required_roles]}."
             )
         return current_user
     return role_checker
