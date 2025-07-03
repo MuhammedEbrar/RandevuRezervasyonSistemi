@@ -4,9 +4,9 @@ from sqlalchemy.exc import IntegrityError # E-posta tekilliği için
 from typing import Optional
 from uuid import UUID # UUID tipi için
 
-from models.user import User, UserRole # Modeli ve Enum'ı import ediyoruz
-from schemas.user import UserCreate, UserUpdate
-from core.security import get_password_hash # Şifre hashleme için
+from backend.models.user import User, UserRole # Modeli ve Enum'ı import ediyoruz
+from backend.schemas.user import UserCreate, UserUpdate
+from backend.core.security import get_password_hash # Şifre hashleme için
 
 
 def get_user_by_email(db: Session, email: str) -> Optional[User]:

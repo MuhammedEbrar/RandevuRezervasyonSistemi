@@ -1,13 +1,17 @@
 # backend/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from config import settings # config dosyamızı import ediyoruz (henüz oluşturacağız ama şimdiden ekleyebiliriz)
+from backend.core.settings import settings # config dosyasını import eder
+from backend.routers import auth # Auth router'ı import eder
 
 app = FastAPI(
     title="Randevu ve Kiralama Platformu API",
     description="Modüler bir randevu ve kiralama sistemi için API dokümantasyonu.",
     version="0.1.0",
 )
+
+# Router'larıı eklendiği bölüm
+app.include_router(auth.router)
 
 # CORS ayarları
 # Geliştirme aşamasında her yerden erişime izin veriyoruz.

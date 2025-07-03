@@ -5,7 +5,7 @@ from sqlalchemy.sql import func
 import uuid # uuid.uuid4 için
 import enum # Python'ın kendi enum'u
 
-from ..database import Base # database.py'den Base'i import ediyoruz
+from backend.database import Base # database.py'den Base'i import ediyoruz
 
 # Kullanıcı rolleri için Python Enum'u
 class UserRole(str, enum.Enum):
