@@ -1,7 +1,7 @@
 # backend/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .config import settings # config dosyamızı import ediyoruz (henüz oluşturacağız ama şimdiden ekleyebiliriz)
+from config import settings # config dosyamızı import ediyoruz (henüz oluşturacağız ama şimdiden ekleyebiliriz)
 
 app = FastAPI(
     title="Randevu ve Kiralama Platformu API",
