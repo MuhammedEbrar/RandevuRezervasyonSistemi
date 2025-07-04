@@ -2,8 +2,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from .config import settings # settings objesini import ediyoruz
-from backend.core.settings import settings
+from .core_settings import settings # settings objesini artık core_settings.py'den alıyoruz
+from randevu_backend.core_settings import settings # backend yerine randevu_backend kullanıyoruz
 
 SQLALCHEMY_DATABASE_URL = settings.DATABASE_URL
 
