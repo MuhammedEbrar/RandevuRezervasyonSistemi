@@ -17,13 +17,15 @@ load_dotenv(dotenv_path=Path(__file__).resolve().parents[2] / '.env')
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 
-from randevu_backend.database import Base
+from database import Base
 
 
 # Users modeli için:
 
-### from randevu_backend.models import user 
-import randevu_backend.models.user as user_module # user_module ismini verdik ki çakışmasın
+### from backend.models import user 
+#HATALIYDI#import backend.models.user as user_module # user_module ismini verdik ki çakışmasın
+from models import user
+
 # Daha sonra aşağıdaki target_metadata satırında user_module.Base.metadata kullanabiliriz.
 
 
@@ -38,7 +40,7 @@ if config.config_file_name is not None:
 
 
 ###target_metadata = Base.metadata
-target_metadata = user_module.Base.metadata # user_module'den Base'i alıyoruz
+target_metadata = Base.metadata 
 
 def run_migrations_offline() -> None:
     url = config.get_main_option("sqlalchemy.url")
