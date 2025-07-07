@@ -3,7 +3,8 @@ name = "randevu-backend"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "Muhammed Ebrar",email = "kuzucuoglumuhammed@gmail.com"}
+    {name = "Muhammed Ebrar",email = "kuzucuoglumuhammed@gmail.com"},
+    {name = "Iskender Kahraman",email = "iskenderkhrmn61@gmail.com"}
 ]
 # readme = "README.md"  # Bu satır yoruma alındı veya silindi
 requires-python = ">=3.13"
