@@ -21,3 +21,65 @@ Projeyi GitHub'dan yerel makinenize kopyalayın:
 
 ```bash
 git clone [https://github.com/MuhammedEbrar/RandevuRezervasyonSistemi.git](https://github.com/MuhammedEbrar/RandevuRezervasyonSistemi.git)
+
+
+### 2. PostgreSQL Veritabanı ve Kullanıcısı Oluşturma
+
+Bu adımda, uygulamanın kullanacağı veritabanını ve kullanıcıyı oluşturacaksınız.
+
+    * PostgreSQL servisi çalıştığından emin olun. Windows'ta genellikle servisler listesinden veya PostgreSQL uygulamalarından başlatabilirsiniz.
+
+    * Yönetici yetkileriyle (örneğin postgres kullanıcısı olarak) PostgreSQL komut istemcisine (psql) bağlanın. Windows'ta Başlat Menüsü'nden "SQL Shell (psql)" uygulamasını bulabilirsiniz. Server, Database, Port, Username için varsayılanları kabul edin, Password kısmına PostgreSQL kurulumunda belirlediğiniz yönetici şifresini girin.
+
+    * Açılan psql komut istemcisinde aşağıdaki SQL komutlarını çalıştırın. Bu komutları tek tek kopyalayıp yapıştırın ve her satırın sonunda Enter tuşuna basın.
+
+ ------------------------------------------------------------------------------------
+
+    -- Kullanıcı oluştur (eğer yoksa) ve şifresini belirle
+-- Şifreyi projenizdeki .env dosyasında kullanacağınız şifre ile aynı yapın!
+-- RANDENİZİ KENDİNİZ GİRİN
+DO
+$do$
+BEGIN
+   IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'randevuuser') THEN
+      CREATE USER randevuuser WITH PASSWORD 'MEKPostgreSQL22003';
+   END IF;
+END
+$do$;
+
+-- Veritabanı oluştur (eğer yoksa) ve sahibini belirle
+CREATE DATABASE randevuplatformu_db OWNER randevuuser;
+
+-- Kullanıcıya veritabanı üzerinde tüm yetkileri ver
+GRANT ALL PRIVILEGES ON DATABASE randevuplatformu_db TO randevuuser;
+
+-- İsteğe bağlı: Yeni rol için varsayılan ayarlar
+ALTER ROLE randevuuser SET client_encoding TO 'utf8';
+ALTER ROLE randevuuser SET default_transaction_isolation TO 'read committed';
+ALTER ROLE randevuuser SET timezone TO 'UTC';
+
+ ------------------------------------------------------------------------------------
+
+ ### 3.Poetry Bağımlılıklarını Kurma
+
+* Backend dizinine giderek Python bağımlılıklarını Poetry ile kurun:
+
+
+    cd backend
+    poetry install --no-root
+
+### 4. Veritabanı Migrasyonlarını Uygulama
+
+* Projenin veritabanı şemasını oluşturmak için Alembic migrasyonlarını uygulayın:
+
+
+    poetry run alembic upgrade head
+
+### 5. FastAPI Uygulamasını Başlatma
+
+* Uygulamayı yerel sunucunuzda başlatın:
+
+
+    poetry run uvicorn main:app --reload
+
+Uygulama çalışmaya başladığında terminalde Uvicorn running on http://127.0.0.1:8000 mesajını görmelisiniz.
