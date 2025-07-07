@@ -1,8 +1,4 @@
-Elbette! Aşağıda verdiğiniz metni düzenlenmiş ve okunabilirliği yüksek şekilde **Markdown formatında** hazırladım:
 
----
-
-````markdown
 # Modüler Randevu ve Kiralama Platformu: Yerel Kurulum Rehberi
 
 Bu rehber, projenin backend ve veritabanı ortamını yerel makinenizde kurmak için adım adım talimatlar içerir.
@@ -39,23 +35,22 @@ Projeyi GitHub’dan yerel makinenize kopyalayın:
 
 ```bash
 git clone https://github.com/MuhammedEbrar/RandevuRezervasyonSistemi.git
-````
+```
 
 ---
 
 ### 2. 🗄️ PostgreSQL Veritabanı ve Kullanıcısı Oluşturma
 
-1. **PostgreSQL servisinin çalıştığından emin olun.**
+1. **PostgreSQL servisinin çalıştığından emin olun.**  
    Windows’ta servisler listesinden veya PostgreSQL uygulamasından başlatabilirsiniz.
 
-2. **Yönetici yetkileriyle `psql` kabuğuna bağlanın.**
+2. **Yönetici yetkileriyle `psql` kabuğuna bağlanın.**  
+   - Windows’ta "SQL Shell (psql)" uygulamasını açın.  
+   - Server, Database, Port, Username için varsayılanları kabul edin.  
+   - Password kısmına PostgreSQL kurulumunda belirlediğiniz şifreyi girin.
 
-   * Windows’ta "SQL Shell (psql)" uygulamasını açın.
-   * Server, Database, Port, Username için varsayılanları kabul edin.
-   * Password kısmına PostgreSQL kurulumunda belirlediğiniz şifreyi girin.
-
-3. **Aşağıdaki SQL komutlarını sırasıyla girin:**
-   *(Şifreyi `.env` dosyasındakiyle aynı yapın)*
+3. **Aşağıdaki SQL komutlarını sırasıyla girin:**  
+   _(Şifreyi `.env` dosyasındakiyle aynı yapın)_
 
 ```sql
 -- Kullanıcı oluştur (eğer yoksa) ve şifresini belirle
@@ -120,10 +115,3 @@ Uvicorn running on http://127.0.0.1:8000
 ---
 
 📝 Artık uygulamanız yerel ortamda çalışıyor! Gerekli tüm yapılandırmaları başarıyla tamamladınız.
-
-```
-
----
-
-İstersen bu Markdown içeriğini `.md` uzantılı bir dosyaya da dönüştürüp sana verebilirim. Yardımcı olayım mı?
-```
