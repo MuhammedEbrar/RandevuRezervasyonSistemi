@@ -1,4 +1,5 @@
 # backend/main.py
+from routers import resource
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from core.settings import settings # config dosyasını import eder
@@ -12,6 +13,7 @@ app = FastAPI(
 
 # Router'larıı eklendiği bölüm
 app.include_router(auth.router)
+app.include_router(resource.router)
 
 # CORS ayarları
 # Geliştirme aşamasında her yerden erişime izin veriyoruz.

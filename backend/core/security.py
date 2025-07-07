@@ -43,7 +43,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     return encoded_jwt
 
 # OAuth2PasswordBearer, FastAPI'nin security schemes için kullandığı bir mekanizma
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/auth/login") 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 # JWT token'ı doğrulama ve veri alma
 def verify_token(token: str, credentials_exception: HTTPException) -> dict:

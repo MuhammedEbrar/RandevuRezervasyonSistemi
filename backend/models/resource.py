@@ -1,3 +1,4 @@
+# backend/models/resource.py
 from sqlalchemy import Column, String, Integer, Boolean, DateTime, Enum, Text, ForeignKey # Integer eklendi
 from sqlalchemy.dialects.postgresql import UUID, JSONB, ARRAY
 from sqlalchemy.sql import func
@@ -26,11 +27,11 @@ class Resource(Base):
     images = Column(ARRAY(Text), nullable=True) # Varlık resimlerinin URL'leri
     cancellation_policy = Column(String, nullable=True) # İptal politikası açıklaması
     created_at = Column(DateTime(timezone=True), server_default=func.now()) # Oluşturulma tarihi
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now()) # Son güncelleme tarihi
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now()) # Son güncelleme tarihi ve ilk oluşturmada boş kalmaması için
 
     # İlişkiler
     owner = relationship("User", back_populates="resources")
-    # availability_schedules = relationship("AvailabilitySchedule", back_populates="resource")
+    availability_schedules = relationship("AvailabilitySchedule", back_populates="resource")
     # pricing_rules = relationship("PricingRule", back_populates="resource")
     # bookings = relationship("Booking", back_populates="resource")
 

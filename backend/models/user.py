@@ -1,5 +1,6 @@
 # backend/models/user.py
 from sqlalchemy import Column, String, Boolean, DateTime, Enum # Enum için import
+from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID # UUID için
 from sqlalchemy.sql import func
 import uuid # uuid.uuid4 için
@@ -28,7 +29,8 @@ class User(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now()) # Son güncelleme tarihi
 
     # İlişkiler (şimdilik yorum satırı, ileride eklenecek)
-    # resources = relationship("Resource", back_populates="owner")
+    resources = relationship("Resource", back_populates="owner")
+    availability_schedules = relationship("AvailabilitySchedule", back_populates="owner")
     # bookings_as_customer = relationship("Booking", foreign_keys="[Booking.customer_id]", back_populates="customer")
     # bookings_as_owner = relationship("Booking", foreign_keys="[Booking.owner_id]", back_populates="owner")
 
