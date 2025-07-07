@@ -1,34 +1,49 @@
-# schemas/resource.py
-from pydantic import BaseModel, Field
-from typing import Optional
+# backend/schemas/resource.py
+from pydantic import BaseModel, Field # Field için
 from datetime import datetime
+from typing import Optional, List
+from uuid import UUID
 
-# CREATE
+from models.resource import ResourceType # ResourceType enum'unu import ediyoruz
+
+# Resource oluşturmak için girdi şeması
 class ResourceCreate(BaseModel):
-    name: str = Field(..., example="Mavi Toplantı Odası")
-    capacity: int = Field(..., ge=1, example=10)
-    location: Optional[str] = Field(None, example="3. Kat, Oda 305")
-    available: Optional[bool] = Field(default=True)
+    name: str = Field(min_length=3, max_length=100) # Kaynak adı
+    description: Optional[str] = Field(None, max_length=500) # Açıklama
+    type: ResourceType # Kaynak tipi (HIZMET veya MEKAN)
+    capacity: Optional[int] = None # Eğer MEKAN ise kapasite
+    location: Optional[dict] = None # JSON olarak konum bilgisi
+    tags: Optional[List[str]] = None # Etiketler
+    images: Optional[List[str]] = None # Resim URL'leri
+    cancellation_policy: Optional[str] = None # İptal politikası
 
-# UPDATE
+# Resource güncellemek için girdi şeması (tüm alanlar isteğe bağlı)
 class ResourceUpdate(BaseModel):
-    name: Optional[str] = Field(None, example="Güncellenmiş Oda Adı")
-    capacity: Optional[int] = Field(None, ge=1, example=12)
-    location: Optional[str] = Field(None, example="Yenilenen konum")
-    available: Optional[bool] = Field(None)
+    name: Optional[str] = Field(None, min_length=3, max_length=100)
+    description: Optional[str] = Field(None, max_length=500)
+    type: Optional[ResourceType] = None
+    capacity: Optional[int] = None
+    location: Optional[dict] = None
+    is_active: Optional[bool] = None
+    tags: Optional[List[str]] = None
+    images: Optional[List[str]] = None
+    cancellation_policy: Optional[str] = None
 
-# READ / OUTPUT
+# Resource çıktısı (API yanıtı) şeması
 class ResourceOut(BaseModel):
-    id: int
+    resource_id: UUID
+    owner_id: UUID
     name: str
-    capacity: int
-    location: Optional[str]
-    available: bool
+    description: Optional[str] = None
+    type: ResourceType
+    capacity: Optional[int] = None
+    location: Optional[dict] = None
+    is_active: bool
+    tags: Optional[List[str]] = None
+    images: Optional[List[str]] = None
+    cancellation_policy: Optional[str] = None
     created_at: datetime
-    updated_at: datetime
+    updated_at: Optional[datetime] = None
 
     class Config:
-        orm_mode = True  # SQLAlchemy modelleri ile uyumlu hale getirir
-
-
-#example olan kısımlar testten sonra silinecek
+        from_attributes = True # SQLAlchemy modellerinden Pydantic modeline dönüştürme için

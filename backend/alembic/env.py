@@ -25,6 +25,8 @@ from database import Base
 ### from backend.models import user 
 #HATALIYDI#import backend.models.user as user_module # user_module ismini verdik ki çakışmasın
 from models import user
+from models import resource
+from models import availability
 
 # Daha sonra aşağıdaki target_metadata satırında user_module.Base.metadata kullanabiliriz.
 
