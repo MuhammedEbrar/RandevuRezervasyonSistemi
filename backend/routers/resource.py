@@ -17,7 +17,7 @@ router = APIRouter(
     tags=["resources"]
 )
 
-# ✅ Yeni kaynak oluştur
+#  Yeni kaynak oluştur
 @router.post("/", response_model=ResourceOut, status_code=status.HTTP_201_CREATED)
 def create_resource(
     resource_in: ResourceCreate,
@@ -31,7 +31,7 @@ def create_resource(
     # crud fonksiyonunu çağırırken artık owner_id'yi current_user'dan alıyoruz
     return crud_resource.create_resource(db, resource_in, owner_id)
 
-# ✅ Belirli bir kaynağı getir
+# Belirli bir kaynağı getir
 @router.get("/{resource_id}", response_model=ResourceOut)
 def read_resource(
     resource_id: UUID,

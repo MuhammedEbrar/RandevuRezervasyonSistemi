@@ -27,6 +27,7 @@ from database import Base
 from models import user
 from models import resource
 from models import availability
+from models import pricing
 
 # Daha sonra aşağıdaki target_metadata satırında user_module.Base.metadata kullanabiliriz.
 

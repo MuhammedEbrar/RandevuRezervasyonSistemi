@@ -13,17 +13,19 @@ from dotenv import load_dotenv
 # .parents[0] -> /home/mekzcgl/Staj2/RandevuRezervasyonSistemi/backend/core/
 # .parents[1] -> /home/mekzcgl/Staj2/RandevuRezervasyonSistemi/backend/ (yani 'backend' klasörü)
 # .env dosyamız 'RandevuRezervasyonSistemi' ana dizininde olduğu için, 'backend' klasöründen bir seviye yukarı çıkmalıyız.
-load_dotenv(dotenv_path=Path(__file__).resolve().parents[1] / '.env')
+load_dotenv(dotenv_path=Path(__file__).resolve().parents[2] / '.env') # Bu satır doğru kalmalı
 
 
-# --- Hata ayıklama için eklenen print ifadeleri (bu kısımlar isteğe bağlıdır, silebilirsiniz) ---
+# --- Hata ayıklama için eklenen print ifadeleri ---
 print(f"DEBUG: core/settings.py konumu: {Path(__file__).resolve()}")
-dot_env_path = Path(__file__).resolve().parents[1] / '.env' # Yol güncellendi
-print(f"DEBUG: .env aranacak konum: {dot_env_path}")
-print(f"DEBUG: .env dosyası mevcut mu? {dot_env_path.exists()}")
+# .env dosyasının doğru konumunu gösteren debug yolu
+dot_env_debug_path = Path(__file__).resolve().parents[2] / '.env'
+print(f"DEBUG: .env aranacak konum (debug): {dot_env_debug_path}")
+print(f"DEBUG: .env dosyası mevcut mu (debug)? {dot_env_debug_path.exists()}")
 print(f"DEBUG: DATABASE_URL (os.getenv): {os.getenv('DATABASE_URL')}")
 print(f"DEBUG: JWT_SECRET_KEY (os.getenv): {os.getenv('JWT_SECRET_KEY')}")
 # --- Hata ayıklama için eklenen print ifadeleri sonu ---
+
 
 
 class Settings(BaseSettings):
