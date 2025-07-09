@@ -7,7 +7,6 @@ from decimal import Decimal
 from models.pricing import DurationType, ApplicableDay
 
 class PricingRuleCreate(BaseModel):
-    resource_id: UUID # Hangi kaynağa ait
     duration_type: DurationType # Fiyatlandırma süresi tipi
     base_price: Decimal = Field(..., gt=0) # Temel fiyat, 0'dan büyük olmalı
     min_duration: Optional[int] = Field(None, ge=0) # Minimum süre, 0'dan büyük eşit olmalı

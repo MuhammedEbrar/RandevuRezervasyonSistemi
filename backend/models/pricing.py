@@ -1,3 +1,4 @@
+# backend/models/pricing.py
 from sqlalchemy import  Boolean, Column, String, Integer, DateTime, Enum, ForeignKey, Text, DECIMAL, Time
 from sqlalchemy.dialects.postgresql import UUID, ARRAY # UUID ve ARRAY için
 from sqlalchemy.sql import func
