@@ -3,7 +3,7 @@ from routers import resource
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from core.settings import settings # config dosyasını import eder
-from routers import auth # Auth router'ı import eder
+from routers import auth, users, resource, availability, pricing, bookings
 
 app = FastAPI(
     title="Randevu ve Kiralama Platformu API",
@@ -13,7 +13,12 @@ app = FastAPI(
 
 # Router'larıı eklendiği bölüm
 app.include_router(auth.router)
+app.include_router(users.router)
 app.include_router(resource.router)
+app.include_router(availability.router)
+app.include_router(pricing.router)
+
+app.include_router(bookings.router, prefix="/bookings", tags=["bookings"])
 
 # CORS ayarları
 # Geliştirme aşamasında her yerden erişime izin veriyoruz.

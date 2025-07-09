@@ -8,7 +8,6 @@ from models.availability import ScheduleType, DayOfWeek # Enum'ları import ediy
 
 # Müsaitlik takvimi oluşturmak için girdi şeması
 class AvailabilityScheduleCreate(BaseModel):
-    # specific_date ve day_of_week'ten sadece biri olmalı, bu iş mantığı API katmanında kontrol edilebilir
     day_of_week: Optional[DayOfWeek] = None # Haftanın günü (REGULAR için)
     specific_date: Optional[date] = None # Belirli bir tarih (EXCEPTION için)
     start_time: time # Başlangıç saati

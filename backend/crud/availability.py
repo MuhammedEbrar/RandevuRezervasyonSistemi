@@ -5,8 +5,8 @@ from uuid import UUID
 from datetime import date, time
 
 from models.availability import AvailabilitySchedule, ScheduleType, DayOfWeek # Müsaitlik modeli ve Enum'ları
-from models.resource import Resource # İlişki için Resource modeli
-from schemas.availability import AvailabilityScheduleCreate, AvailabilityScheduleUpdate # Girdi şemaları (ileride oluşturulacak)
+from models.resource import Resource # İlişki için Resource modeli (Resource modelinin import edildiğinden emin olun)
+from schemas.availability import AvailabilityScheduleCreate, AvailabilityScheduleUpdate # Girdi şemaları
 
 # Müsaitlik takvimi girişini ID'ye göre getir
 def get_availability_schedule_by_id(db: Session, schedule_id: UUID) -> Optional[AvailabilitySchedule]:
@@ -18,12 +18,29 @@ def get_availability_schedules_for_resource(
     resource_id: UUID,
     owner_id: UUID, # Multi-tenancy ve güvenlik için
     skip: int = 0,
-    limit: int = 100
+    limit: int = 100,
+    start_date: Optional[date] = None, # <-- Yeni eklenen parametre
+    end_date: Optional[date] = None    # <-- Yeni eklenen parametre
 ) -> List[AvailabilitySchedule]:
-    return db.query(AvailabilitySchedule).filter(
+    query = db.query(AvailabilitySchedule).filter(
         AvailabilitySchedule.resource_id == resource_id,
         AvailabilitySchedule.owner_id == owner_id # Sahip kimliği ile filtreleme
-    ).offset(skip).limit(limit).all()
+    )
+
+    # Tarih filtrelerini uygula
+    if start_date:
+        # specific_date üzerinde filtreleme yapıyoruz.
+        # REGULAR müsaitliklerin belirli bir tarihi yoksa,
+        # bu filtreleme sadece EXCEPTION tipli müsaitlikler için anlamlı olacaktır.
+        # Eğer REGULAR müsaitlikler için de bir geçerlilik_başlangıç_tarihi veya benzeri bir alanınız varsa,
+        # o alanı kullanmalısınız.
+        query = query.filter(AvailabilitySchedule.specific_date >= start_date)
+
+    if end_date:
+        query = query.filter(AvailabilitySchedule.specific_date <= end_date)
+            
+    query = query.offset(skip).limit(limit)
+    return query.all()
 
 # Yeni bir müsaitlik takvimi girişi oluştur
 def create_availability_schedule(
@@ -32,8 +49,16 @@ def create_availability_schedule(
     resource_id: UUID,
     owner_id: UUID
 ) -> AvailabilitySchedule:
+    # schedule_in.model_dump() çağrısının ScheduleType ve DayOfWeek enum'larını doğru işlediğinden emin olun.
+    # Pydantic ve SQLAlchemy uyumluluğu için gerekebilir.
+    schedule_data = schedule_in.model_dump()
+    
+    # Enum değerlerini doğrudan aktarmak için:
+    # Eğer schedule_in.day_of_week bir Enum üyesi ise, direkt kullanabilirsiniz.
+    # Eğer string olarak geliyorsa, DayOfWeek(schedule_data.pop('day_of_week')) gibi dönüştürmeniz gerekebilir.
+
     db_schedule = AvailabilitySchedule(
-        **schedule_in.model_dump(),
+        **schedule_data,
         resource_id=resource_id,
         owner_id=owner_id
     )
@@ -48,9 +73,10 @@ def update_availability_schedule(
     db_schedule: AvailabilitySchedule,
     schedule_update: AvailabilityScheduleUpdate
 ) -> AvailabilitySchedule:
+    # exclude_unset=True, sadece ayarlanmış alanları günceller.
     for key, value in schedule_update.model_dump(exclude_unset=True).items():
         setattr(db_schedule, key, value)
-    db.add(db_schedule)
+    db.add(db_schedule) # Session'a zaten ekli olabilir, emin olmak için tekrar ekleyebiliriz.
     db.commit()
     db.refresh(db_schedule)
     return db_schedule
