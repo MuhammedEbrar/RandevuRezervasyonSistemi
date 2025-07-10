@@ -29,10 +29,12 @@ class User(Base):
     # İlişkiler
     resources = relationship("Resource", back_populates="owner")
     pricing_rules = relationship("PricingRule", back_populates="owner") 
-
     availability_schedules = relationship("AvailabilitySchedule", back_populates="owner") 
-    # bookings = relationship("Booking", back_populates="customer") # If you have bookings
-    # owned_bookings = relationship("Booking", back_populates="business_owner", foreign_keys="[Booking.business_owner_id]") # If Business Owner has bookings
     
+    
+    # Booking ilişkileri eklendi
+    bookings_as_customer = relationship("Booking", foreign_keys="[Booking.customer_id]", back_populates="customer")
+    bookings_as_owner = relationship("Booking", foreign_keys="[Booking.owner_id]", back_populates="owner")
+
     def __repr__(self):
         return f"<User(email='{self.email}', role='{self.role}')>"

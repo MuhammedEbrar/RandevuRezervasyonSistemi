@@ -33,7 +33,6 @@ class Resource(Base):
     owner = relationship("User", back_populates="resources")
     availability_schedules = relationship("AvailabilitySchedule", back_populates="resource")
     pricing_rules = relationship("PricingRule", back_populates="resource") # <--- UNCOMMENT THIS LINE
-    # bookings = relationship("Booking", back_populates="resource") # Keep this commented if not ready
-
+    bookings = relationship("Booking", back_populates="resource")
     def __repr__(self):
         return f"<Resource(name='{self.name}', type='{self.type}', owner_id='{self.owner_id}')>"
