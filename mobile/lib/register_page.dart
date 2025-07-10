@@ -1,9 +1,27 @@
-// lib/register_page.dart
+// lib/register_page.dart (GÜNCELLENDİ)
+
 
 import 'package:flutter/material.dart';
+import 'package:mobile/auth_service.dart'; // Servisi dahil ediyoruz
 
-class RegisterPage extends StatelessWidget {
+
+class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
+
+
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+
+class _RegisterPageState extends State<RegisterPage> {
+  // Metin kutularındaki yazıları kontrol etmek için:
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _authService = AuthService();
+ 
+  get cite_start => null; // Servisi oluşturuyoruz
+
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +38,9 @@ class RegisterPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // E-posta metin kutusu
-              const TextField(
-                decoration: InputDecoration(
+              TextField(
+                controller: _emailController, // Controller'ı bağlıyoruz
+                decoration: const InputDecoration(
                   labelText: 'E-posta',
                   prefixIcon: Icon(Icons.email_outlined),
                   border: OutlineInputBorder(),
@@ -30,21 +48,24 @@ class RegisterPage extends StatelessWidget {
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 16),
-
-              // Şifre metin kutusu
-              const TextField(
+              TextField(
+                controller: _passwordController, // Controller'ı bağlıyoruz
                 obscureText: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Şifre',
                   prefixIcon: Icon(Icons.lock_person_outlined),
                   border: OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 30),
-
-              // Kayıt Ol butonu
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  [cite_start];// Butona basıldığında register fonksiyonunu çağırıyoruz [cite: 129]
+                  _authService.register(
+                    _emailController.text,
+                    _passwordController.text,
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 50),
                   backgroundColor: Colors.blueGrey,
@@ -53,10 +74,7 @@ class RegisterPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text(
-                  'Kayıt Ol',
-                  style: TextStyle(fontSize: 16),
-                ),
+                child: const Text('Kayıt Ol', style: TextStyle(fontSize: 16)),
               ),
             ],
           ),
