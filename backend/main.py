@@ -1,9 +1,9 @@
 # backend/main.py
-from routers import resource
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from core.settings import settings # config dosyasını import eder
-from routers import auth, users, resource, availability, pricing, bookings
+# DÜZELTİLDİ: Gereksiz tekrar eden import satırı kaldırıldı
+from routers import auth, users, resource, availability, pricing, bookings # Tüm router'lar tek satırda import edildi
 
 app = FastAPI(
     title="Randevu ve Kiralama Platformu API",
