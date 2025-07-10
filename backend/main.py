@@ -17,8 +17,7 @@ app.include_router(users.router)
 app.include_router(resource.router)
 app.include_router(availability.router)
 app.include_router(pricing.router)
-
-app.include_router(bookings.router, prefix="/bookings", tags=["bookings"])
+app.include_router(bookings.router)
 
 # CORS ayarları
 # Geliştirme aşamasında her yerden erişime izin veriyoruz.

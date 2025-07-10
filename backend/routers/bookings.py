@@ -27,39 +27,31 @@ class PriceRequest(BaseModel):
 class PriceResponse(BaseModel):
     total_price: float
 
-@router.post("/calculate_price", response_model=PriceResponse, status_code=status.HTTP_200_OK) # HTTP status eklendi
+@router.post("/calculate_price", response_model=PriceResponse, status_code=status.HTTP_200_OK)
 async def calculate_price(
     data: PriceRequest, 
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user) # <-- current_user bağımlılığını ekledik
+    current_user: User = Depends(get_current_user)
 ):
     if data.end_time <= data.start_time:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Bitiş zamanı başlangıç zamanından sonra olmalıdır.")
 
-    # Buradaki fonksiyon çağrısını değiştirmeliyiz
-    # get_pricing_rule_by_id yerine get_applicable_pricing_rule kullanıyoruz
-    # ve owner_id'yi current_user'dan alıyoruz.
     pricing_rule = crud_pricing.get_applicable_pricing_rule(
         db, 
         resource_id=data.resource_id, 
         booking_start_time=data.start_time, 
         booking_end_time=data.end_time,
-        owner_id=current_user.user_id # <-- owner_id'yi buraya ekledik
+        owner_id=current_user.user_id 
     )
 
     if not pricing_rule:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Belirtilen kaynak ve zaman için uygun fiyatlandırma kuralı bulunamadı.")
 
-    # Fiyat hesaplama mantığı
-    # Fiyatlandırma kuralınızın yapısına ve tipine (saatlik, günlük vb.) göre bu kısım değişecektir.
-    # Örnek olarak, basit bir saatlik hesaplama varsayalım:
-    
     duration_hours = (data.end_time - data.start_time).total_seconds() / 3600
-    
-    # pricing_rule objenizde 'price' niteliği olduğundan emin olun (PricingRule modelinizde tanımlı olmalı)
-    total_price = duration_hours * pricing_rule.price 
 
-    # Fiyatı yuvarla ve yanıt olarak dön
+    # Hata veren satırı düzelttik: pricing_rule.base_price'ı float'a dönüştürüyoruz
+    total_price = duration_hours * float(pricing_rule.base_price) 
+
     return PriceResponse(total_price=round(total_price, 2))
 
 # --- Diğer booking endpoint'leriniz buraya devam eder ---
