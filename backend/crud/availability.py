@@ -2,8 +2,9 @@
 from sqlalchemy.orm import Session
 from typing import Optional, List
 from uuid import UUID
-from datetime import date, time
+from datetime import date, time, datetime
 
+from models.booking import Booking, BookingStatus 
 from models.availability import AvailabilitySchedule, ScheduleType, DayOfWeek # Müsaitlik modeli ve Enum'ları
 from models.resource import Resource # İlişki için Resource modeli (Resource modelinin import edildiğinden emin olun)
 from schemas.availability import AvailabilityScheduleCreate, AvailabilityScheduleUpdate # Girdi şemaları
@@ -89,3 +90,29 @@ def delete_availability_schedule(db: Session, schedule_id: UUID) -> Optional[UUI
         db.commit()
         return schedule_id
     return None
+
+def check_availability(
+    db: Session,
+    resource_id: UUID,
+    start_time: datetime,
+    end_time: datetime,
+    exclude_booking_id: Optional[UUID] = None # Güncelleme yaparken kendini hariç tutmak için
+) -> bool:
+
+    query = db.query(Booking).filter(
+        Booking.resource_id == resource_id,
+        Booking.status.in_([BookingStatus.PENDING, BookingStatus.CONFIRMED]) # Sadece aktif/beklemedeki rezervasyonları kontrol et
+    )
+
+    if exclude_booking_id:
+        query = query.filter(Booking.booking_id != exclude_booking_id)
+
+    query = query.filter(
+        Booking.start_time < end_time, # Mevcut rezervasyonun başlangıcı, yeni rezervasyonun bitişinden önce olmalı
+        Booking.end_time > start_time  # Mevcut rezervasyonun bitişi, yeni rezervasyonun başlangıcından sonra olmalı
+    )
+    
+    # Çakışan bir rezervasyon varsa, müsait değiliz demektir.
+    conflicting_booking = query.first()
+    
+    return conflicting_booking is None

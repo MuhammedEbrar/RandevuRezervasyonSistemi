@@ -111,3 +111,4 @@ def delete_resource(
     crud_resource.delete_resource(db, resource_id=resource_id)
     # 204 No Content yanıtında genellikle gövde olmaz.
     return
+

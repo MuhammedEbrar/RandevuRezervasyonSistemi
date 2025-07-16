@@ -120,7 +120,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                             if (slotSnapshot.connectionState == ConnectionState.waiting) {
                               return const Center(child: CircularProgressIndicator());
                             }
-                            if (slotSnapshot.hasError) return Center(child: Text('Saatler getirilemedi.'));
+                            if (slotSnapshot.hasError) return const Center(child: Text('Saatler getirilemedi.'));
                             if (!slotSnapshot.hasData || slotSnapshot.data!.isEmpty) {
                               return const Center(child: Text('Bu tarih için müsait saat bulunamadı.'));
                             }
