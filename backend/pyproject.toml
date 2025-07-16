@@ -22,7 +22,6 @@ dependencies = [
     "passlib[bcrypt] (>=1.7.4,<2.0.0)"
 ]
 
-# BURAYI YENİDEN DÜZENLEYİN:
 ##packages = [{include = "randevu_backend"}] # Artık randevu_backend klasörünü paket olarak belirtiyoruz.
 
 [build-system]

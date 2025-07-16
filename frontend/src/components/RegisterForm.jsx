@@ -34,7 +34,9 @@ const RegisterForm = () => {
 
     try {
       // Backend'deki /auth/register endpoint'ine istek gönder
-      const response = await fetch('http://localhost:8000/auth/register', {
+      const response = await fetch('http://localhost:8000/auth/register',  //orjinal satır bu
+      //const response = await fetch('https://4c5b77060a63.ngrok-free.app/auth/register', //ngork'un backend' e sorunsuz bağlanması için bunu kullanıyoruz(ngrok her başladığında adres değişir) 
+      {   
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

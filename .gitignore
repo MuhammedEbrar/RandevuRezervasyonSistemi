@@ -1,0 +1,37 @@
+# Python
+*.pyc
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+
+# Specific to VS Code (optional but good practice)
+.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Build artifacts (if any)
+dist/
+build/
+
+# Mobile (Flutter specific - if it's a monorepo, these should be in mobile/.gitignore)
+# If the main .gitignore is supposed to cover mobile as well, consider adding:
+# mobile/.flutter-plugins
+# mobile/.flutter-plugins-dependencies
+# mobile/.dart_tool/
+# mobile/build/
+# mobile/.idea/
+# mobile/macos/Flutter/ephemeral/
+# mobile/ios/.symlinks/
+# mobile/android/.gradle/
+# mobile/android/local.properties

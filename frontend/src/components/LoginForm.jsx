@@ -11,7 +11,9 @@ const LoginForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch('http://localhost:8000/auth/login', {
+      const response = await fetch('http://localhost:8000/auth/login',  //orjinal satır bu
+      //const response = await fetch('https://4c5b77060a63.ngrok-free.app/auth/login', //ngork'un backend' e sorunsuz bağlanması için bunu kullanıyoruz(ngrok her başladığında adres değişir) 
+        {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',

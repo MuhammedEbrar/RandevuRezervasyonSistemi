@@ -27,6 +27,7 @@ origins = [
     "http://localhost:3000", # Web frontend'in varsayılan adresi
     "http://127.0.0.1:8000",
     "http://10.0.2.2:8000", # Android emulator için
+    "https://*.ngrok-free.app",  #ngrok için ekledim
     # Eğer mobil cihazdan gerçek cihazında test ediyorsan kendi lokal IP adresini buraya ekle:
     # "http://<SENIN_LOKAL_IP_ADRESIN>:8000"
     "*" # Geçici olarak tüm originlere izin verir, sadece geliştirme için kullanın!
