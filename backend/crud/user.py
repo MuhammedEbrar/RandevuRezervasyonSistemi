@@ -4,7 +4,7 @@ from sqlalchemy.exc import IntegrityError # E-posta tekilliği için
 from typing import Optional
 from uuid import UUID # UUID tipi için
 
-from models.user import User, UserRole # Modeli ve Enum'ı import ediyoruz
+from models import User, UserRole
 from schemas.user import UserCreate, UserUpdate
 from core.security import get_password_hash # Şifre hashleme için
 

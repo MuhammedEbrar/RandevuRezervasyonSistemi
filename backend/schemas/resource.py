@@ -4,8 +4,7 @@ from datetime import datetime
 from typing import Optional, List
 from uuid import UUID
 
-from models.resource import ResourceType # ResourceType enum'unu import ediyoruz
-
+from models import ResourceType
 # Resource oluşturmak için girdi şeması
 class ResourceCreate(BaseModel):
     name: str = Field(min_length=3, max_length=100) # Kaynak adı

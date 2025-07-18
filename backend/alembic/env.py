@@ -12,30 +12,18 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 # .env dosyasını yükle.
-# env.py, 'backend/alembic/env.py' konumunda.
-# Projenin ana kök dizinindeki '.env' dosyasına ulaşmak için parents[2] kullanıyoruz.
 load_dotenv(dotenv_path=Path(__file__).resolve().parents[2] / '.env')
 
 
 # Backend projenizin ana dizinini (yani 'backend' klasörünü) Python yolu (sys.path) üzerine ekleyin.
-# Bu, Alembic'in 'backend' altında bulunan ana Python paketini bulmasını sağlar.
-# Path(__file__).resolve().parents[1] -> /home/mekzcgl/Staj2/RandevuRezervasyonSistemi/backend/
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 
-# Projenizin 'Base' objesini import edin.
-# database.py dosyası 'backend' klasörünün hemen altında olduğu için doğrudan import ediyoruz.
-from database import Base
+from database import Base # Base objesi doğrudan database.py'den alınır.
 
-
-# KRİTİK KISIM: TÜM MODELLERİ BURADA IMPORT EDİN
-# Alembic'in bu modelleri görmesi için her bir model dosyasını import etmelisiniz.
-# Bu importlar, Base.metadata'nın tüm tanımlı modelleri keşfetmesini sağlar.
-from models import user
-from models import resource
-from models import availability
-from models import pricing
-from models import booking # Yeni eklenen Booking modeli
+# KRİTİK KISIM: TÜM MODELLERİ BURADA TEK BİR PAKET OLARAK IMPORT EDİN
+# Bu, SQLAlchemy'nin tüm tanımlı modelleri ve ilişkileri otomatik olarak keşfetmesini sağlar.
+import models # Bu tek import, models/__init__.py üzerinden tüm modelleri yükler.
 
 
 # this is the Alembic Config object, which provides
@@ -43,26 +31,16 @@ from models import booking # Yeni eklenen Booking modeli
 config = context.config
 
 # Interpret the config file for Python logging.
-# This line sets up loggers basically.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 
 # Bu, Alembic'in migrasyonları oluştururken izleyeceği SQLAlchemy meta verisidir.
-target_metadata = Base.metadata
+target_metadata = Base.metadata # Tüm modellerin meta verisi Base objesinde toplanır.
 
 
 def run_migrations_offline() -> None:
-    """Run migrations in 'offline' mode.
-
-    This configures the context with just a URL
-    and not an Engine, though an Engine is acceptable
-    here as well.  By skipping the Engine creation
-    we don't even need a DBAPI to be available.
-
-    Calls to context.execute() here emit the given string to the
-    script output.
-    """
+    """Run migrations in 'offline' mode."""
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
         url=url,
@@ -76,11 +54,7 @@ def run_migrations_offline() -> None:
 
 
 def run_migrations_online() -> None:
-    """Run migrations in 'online' mode.
-
-    In this scenario we need to create an Engine
-    and associate a connection with the context.
-    """
+    """Run migrations in 'online' mode."""
     connectable = engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",

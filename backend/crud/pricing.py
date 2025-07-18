@@ -4,7 +4,7 @@ from typing import Optional, List
 from uuid import UUID
 from datetime import date, time, datetime
 from sqlalchemy import or_ # or_ import edildi
-from models.pricing import PricingRule, DurationType, ApplicableDay # Güncel modeller import edildi
+from models import PricingRule, DurationType, ApplicableDay
 from schemas.pricing import PricingRuleCreate, PricingRuleUpdate # Girdi şemaları
 
 # Fiyatlandırma kuralını ID'ye göre getir

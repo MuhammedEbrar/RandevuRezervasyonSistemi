@@ -4,7 +4,7 @@ from datetime import date, time, datetime
 from typing import Optional
 from uuid import UUID
 
-from models.availability import ScheduleType, DayOfWeek # Enum'ları import ediyoruz
+from models import ScheduleType, DayOfWeek
 
 # Müsaitlik takvimi oluşturmak için girdi şeması
 class AvailabilityScheduleCreate(BaseModel):

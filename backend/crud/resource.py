@@ -4,7 +4,7 @@ from typing import Optional, List
 from uuid import UUID # UUID tipi için
 from sqlalchemy.exc import SQLAlchemyError
 
-from models.resource import Resource, ResourceType # Resource modeli ve Enum'ı
+from models import Resource, ResourceType # Resource modeli ve Enum'ı
 from schemas.resource import ResourceCreate, ResourceUpdate # Girdi şemaları
 
 # Kaynakları ID'ye göre getir

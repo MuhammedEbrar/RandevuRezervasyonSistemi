@@ -16,9 +16,9 @@ function AuthPage() {
 
         {/* Kayan Menü (Toggle Switch) */}
         <div className="bg-gray-200 p-1 rounded-full relative flex w-full max-w-xs mx-auto mb-8">
-             <div
+            <div
                 className="absolute bg-white shadow-md w-1/2 h-full rounded-full transition-transform duration-300 ease-in-out"
-             style={{ transform: mode === 'login' ? 'translateX(0%)' : 'translateX(100%)' }}
+            style={{ transform: mode === 'login' ? 'translateX(0%)' : 'translateX(100%)' }}
         ></div>
         <button type="button" onClick={() => setMode('login')} className="relative w-1/2 py-2 text-center z-10 font-bold text-gray-700">Giriş Yap</button>
         <button type="button" onClick={() => setMode('register')} className="relative w-1/2 py-2 text-center z-10 font-bold text-gray-700">Kayıt Ol</button>

@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Optional
 from uuid import UUID
 
-from models.user import UserRole # UserRole enum'unu import ediyoruz
+from models import UserRole
 
 # Kullanıcı kaydı için girdi şeması
 class UserCreate(BaseModel):

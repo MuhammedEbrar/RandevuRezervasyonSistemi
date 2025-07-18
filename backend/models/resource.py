@@ -15,7 +15,7 @@ class ResourceType(str, enum.Enum):
 class Resource(Base):
     __tablename__ = "resources"
 
-    resource_id = Column(UUID(as_uuid=True), primary_key = True, default= uuid.uuid4)
+    resource_id = Column(UUID(as_uuid=True), primary_key = True, default=uuid.uuid4)
     owner_id = Column(UUID(as_uuid=True), ForeignKey("users.user_id"), nullable=False)
     name = Column(String, index=True, nullable=False)
     description = Column(String, nullable=True)
@@ -27,12 +27,13 @@ class Resource(Base):
     images = Column(ARRAY(Text), nullable=True)
     cancellation_policy = Column(String, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
-    # İlişkiler
+    # İlişkiler: back_populates'ların doğru ve eşleşen isimlere sahip olduğundan emin olun
     owner = relationship("User", back_populates="resources")
-    availability_schedules = relationship("AvailabilitySchedule", back_populates="resource")
-    pricing_rules = relationship("PricingRule", back_populates="resource") # <--- UNCOMMENT THIS LINE
-    bookings = relationship("Booking", back_populates="resource")
+    availability_schedules = relationship("AvailabilitySchedule", back_populates="resource", cascade="all, delete-orphan") # BURASI KRİTİK!
+    pricing_rules = relationship("PricingRule", back_populates="resource", cascade="all, delete-orphan") # BURASI KRİTİK!
+    bookings = relationship("Booking", back_populates="resource", cascade="all, delete-orphan") # BURASI KRİTİK!
+
     def __repr__(self):
         return f"<Resource(name='{self.name}', type='{self.type}', owner_id='{self.owner_id}')>"

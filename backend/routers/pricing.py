@@ -9,7 +9,7 @@ from schemas.pricing import PricingRuleCreate, PricingRuleUpdate, PricingRuleOut
 from crud import pricing as crud_pricing # CRUD fonksiyonlarını kullanmak için
 
 # Kullanıcı ve rol modellerini ve güvenlik fonksiyonlarını import edin
-from models.user import User, UserRole
+from models import User, UserRole, Resource
 from core.security import get_current_user, check_user_role 
 # from crud import resource as crud_resource # Kaynak kontrolü için eğer gerekecekse
 

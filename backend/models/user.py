@@ -1,10 +1,10 @@
-# backend/models/user.py (Example - adjust to your actual User model file)
-from sqlalchemy import Column, String, Boolean, DateTime, Enum # Make sure Enum is imported
+# backend/models/user.py
+from sqlalchemy import Column, String, Boolean, DateTime, Enum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 import uuid
-import enum # For UserRole enum
+import enum
 
 from database import Base # Assuming Base is imported
 
@@ -26,13 +26,10 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
-    # İlişkiler
+    # İlişkiler: back_populates'ların doğru ve eşleşen isimlere sahip olduğundan emin olun
     resources = relationship("Resource", back_populates="owner")
-    pricing_rules = relationship("PricingRule", back_populates="owner") 
-    availability_schedules = relationship("AvailabilitySchedule", back_populates="owner") 
-    
-    
-    # Booking ilişkileri eklendi
+    pricing_rules = relationship("PricingRule", back_populates="owner")
+    availability_schedules = relationship("AvailabilitySchedule", back_populates="owner") # BURASI KRİTİK!
     bookings_as_customer = relationship("Booking", foreign_keys="[Booking.customer_id]", back_populates="customer")
     bookings_as_owner = relationship("Booking", foreign_keys="[Booking.owner_id]", back_populates="owner")
 

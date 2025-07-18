@@ -5,8 +5,7 @@ from datetime import datetime, time, date
 from typing import Optional, List
 from decimal import Decimal # Total price ve deposit amount için
 
-from models.booking import BookingStatus, PaymentStatus # Enum'ları import ediyoruz
-
+from models import BookingStatus, PaymentStatus
 # Booking oluşturmak için girdi şeması
 class BookingCreate(BaseModel):
     resource_id: UUID

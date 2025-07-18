@@ -10,10 +10,7 @@ from core.security import get_current_user, check_user_role # Mevcut kullanıcı
 from crud import availability as crud_availability # Müsaitlik CRUD
 from crud import resource as crud_resource # Kaynak CRUD (kapasite için)
 from schemas.availability import AvailabilityScheduleCreate, AvailabilityScheduleUpdate, AvailabilityScheduleOut # Müsaitlik şemaları
-from models.user import User, UserRole
-from models.resource import Resource # Kapasite için Resource modeli
-from models.availability import AvailabilitySchedule, ScheduleType, DayOfWeek # Enum'lar ve AvailabilitySchedule modeli
-
+from models import User, UserRole, Resource, AvailabilitySchedule, ScheduleType, DayOfWeek
 router = APIRouter(prefix="/resources/{resource_id}/availability", tags=["Availability Schedules"]) # /resources/{resource_id}/availability ile başlayan endpointler
 
 # Helper fonksiyon: Kaynağın mevcut kullanıcıya ait olup olmadığını kontrol etmek için
@@ -154,28 +151,27 @@ async def get_available_slots_for_resource(
     resource_id: UUID = FastAPIPath(...),
     start_date: date = Query(..., description="Müsait slotları aramak için başlangıç tarihi"),
     end_date: date = Query(..., description="Müsait slotları aramak için bitiş tarihi"),
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user) # Bu endpoint herkese açık olabilir (müşteriler de bakabilir)
+    db: Session = Depends(get_db) # DÜZELTİLDİ: current_user bağımlılığı kaldırıldı, böylece halka açık oldu
 ):
+    if start_date > end_date:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Başlangıç tarihi bitiş tarihinden sonra olamaz."
+        )
+
     # 1. Kaynak ve sahibini al
     db_resource = crud_resource.get_resource_by_id(db, resource_id)
     if not db_resource:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Kaynak bulunamadı.")
     
-    # 2. Kaynağın müsaitlik takvimini al (hem REGULAR hem EXCEPTION)
-    # Müşteriler de müsait slotları görebilir, bu yüzden owner_id filtresi olmadan tüm müsaitlikleri getirmeliyiz.
-    # Ancak, crud_availability.get_availability_schedules_for_resource fonksiyonu owner_id alıyor.
-    # Bu durumda, ya crud_availability.get_availability_schedules_for_resource fonksiyonunu herkes için
-    # müsaitlikleri getirecek şekilde düzenlemeli (owner_id'yi opsiyonel yaparak)
-    # ya da bu endpoint'e erişimi sadece işletme sahibine özel yapmalıyız.
-    # Şimdilik, get_availability_schedules_for_resource fonksiyonunun owner_id'yi None kabul ettiğini varsayalım.
+
+    # DÜZELTİLDİ: crud_availability.get_availability_schedules_for_resource fonksiyonunun owner_id parametresinin Optional olduğunu varsayıyoruz.
     all_schedules = crud_availability.get_availability_schedules_for_resource(
         db,
         resource_id=resource_id,
-        owner_id=current_user.user_id, # Bu kısım daha sonra current_user.user_id veya başka bir mantıkla değişecek.
-                        # Eğer CRUD fonksiyonu owner_id'yi zorunlu kılıyorsa, bu API'ye get_current_user eklemeli ve current_user.user_id geçmelisiniz.
-        start_date=start_date, # CRUD fonksiyonundaki filtreleme için
-        end_date=end_date # CRUD fonksiyonundaki filtreleme için
+        owner_id=None, # Bu endpoint'i public yapmak için owner_id'yi None geçiyoruz
+        start_date=start_date,
+        end_date=end_date
     )
 
     # Sadece aktif ve müsait olan kuralları dikkate al
@@ -183,7 +179,6 @@ async def get_available_slots_for_resource(
 
     # 3. Mevcut rezervasyonları al (Hafta 4'te Bookings tablosu eklenecek)
     # Şimdilik Bookings tablosu olmadığı için boş bir liste varsayıyoruz.
-    # booked_slots = crud_booking.get_bookings_for_resource(db, resource_id, start_date, end_date) # Hafta 4'te eklenecek
     booked_slots = [] # Şimdilik boş
 
 

@@ -4,7 +4,7 @@ from typing import Optional, List
 from uuid import UUID
 from decimal import Decimal
 
-from models.pricing import DurationType, ApplicableDay
+from models import DurationType, ApplicableDay
 
 class PricingRuleCreate(BaseModel):
     duration_type: DurationType # Fiyatlandırma süresi tipi

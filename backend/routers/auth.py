@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from schemas.user import UserCreate, UserOut, UserLogin # Kullanıcı şemalarınız
 from crud import user as crud_user # Stajyer 1'in yazdığı CRUD fonksiyonları
 from core.security import get_password_hash, verify_password, create_access_token # Güvenlik fonksiyonları
-from models.user import User, UserRole # SQLAlchemy User modeli
+from models import User, UserRole
 from database import get_db # Veritabanı oturumu için bağımlılık
 
 router = APIRouter(prefix="/auth", tags=["Auth"]) # /auth ile başlayan endpointler, Swagger'da "Auth" altında görünür

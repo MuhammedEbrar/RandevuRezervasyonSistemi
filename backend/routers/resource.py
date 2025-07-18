@@ -5,8 +5,7 @@ from uuid import UUID
 from typing import List, Optional # Optional, List import edildi
 
 from database import get_db
-from models.resource import Resource
-from models.user import User, UserRole
+from models import Resource, User, UserRole
 from schemas.resource import ResourceCreate, ResourceUpdate, ResourceOut
 from crud import resource as crud_resource
 
@@ -57,19 +56,19 @@ def list_resources(
 # --- Belirli Bir Kaynağı Getirme ---
 @router.get("/{resource_id}", response_model=ResourceOut)
 def read_resource(
-    resource_id: UUID, 
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user) # Herhangi bir doğrulanmış kullanıcı
+    resource_id: UUID,
+    db: Session = Depends(get_db)
+    # DÜZELTİLDİ: current_user bağımlılığı kaldırıldı, böylece halka açık oldu
 ):
     db_resource = crud_resource.get_resource_by_id(db, resource_id=resource_id)
     if not db_resource:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Kaynak bulunamadı.")
-    
-    # Sadece kaynağın sahibi veya yönetici (admin) rolündeki kullanıcı kaynağı görebilir.
-    # UserRole.ADMIN eklemek isterseniz: or current_user.role == UserRole.ADMIN
-    if db_resource.owner_id != current_user.user_id and current_user.role != UserRole.BUSINESS_OWNER:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Bu kaynağı görme yetkiniz yok.")
-        
+
+    # DÜZELTİLDİ: Bu endpoint artık halka açık olduğu için,
+    # sadece belirli rollerin erişimini kısıtlayan bir kontrol burada mantıksızdır.
+    # Eğer kaynağın sadece sahibi görebilsin isterseniz, current_user bağımlılığını geri getirin.
+    # Bu senaryoda amacımız halka açık olması.
+
     return db_resource
 
 # --- Kaynak Güncelleme ---
