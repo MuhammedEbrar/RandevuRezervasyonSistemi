@@ -7,7 +7,7 @@ from datetime import datetime, date
 
 from database import get_db
 from core.security import get_current_user, check_user_role
-from crud import booking as crud_booking
+from crud import bookings as crud_booking
 from crud import resource as crud_resource
 from crud import pricing as crud_pricing
 
@@ -45,11 +45,11 @@ async def calculate_price(
     duration_hours = (data.end_time - data.start_time).total_seconds() / 3600
     
     if pricing_rule.duration_type == "PER_HOUR":
-        total_price = duration_hours * pricing_rule.base_price
+        total_price = duration_hours * float(pricing_rule.base_price)
     elif pricing_rule.duration_type == "FIXED_PRICE":
-        total_price = pricing_rule.base_price
+        total_price = duration_hours * float(pricing_rule.base_price)
     else:
-        total_price = duration_hours * pricing_rule.base_price
+        total_price = duration_hours * float(pricing_rule.base_price)
 
     return BookingCalculatePriceResponse(total_price=round(total_price, 2))
 

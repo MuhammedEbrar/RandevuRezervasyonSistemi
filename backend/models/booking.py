@@ -50,6 +50,7 @@ class Booking(Base):
     customer = relationship("User", foreign_keys=[customer_id], back_populates="bookings_as_customer")
     owner = relationship("User", foreign_keys=[owner_id], back_populates="bookings_as_owner")
     parent_booking = relationship("Booking", remote_side=[booking_id]) # Self-referencing ilişki
+    payment = relationship("Payment", uselist=False, back_populates="booking") # uselist=False çünkü bir rezervasyonun tek bir ödemesi olur
 
     def __repr__(self):
         return f"<Booking(id='{self.booking_id}', resource='{self.resource_id}', customer='{self.customer_id}')>"
