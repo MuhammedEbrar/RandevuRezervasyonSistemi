@@ -25,6 +25,7 @@ class User(Base):
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    payments_made = relationship("Payment", back_populates="customer")
 
     # İlişkiler: back_populates'ların doğru ve eşleşen isimlere sahip olduğundan emin olun
     resources = relationship("Resource", back_populates="owner")
@@ -32,6 +33,9 @@ class User(Base):
     availability_schedules = relationship("AvailabilitySchedule", back_populates="owner") # BURASI KRİTİK!
     bookings_as_customer = relationship("Booking", foreign_keys="[Booking.customer_id]", back_populates="customer")
     bookings_as_owner = relationship("Booking", foreign_keys="[Booking.owner_id]", back_populates="owner")
+    payments_made = relationship("Payment", back_populates="customer")
 
     def __repr__(self):
         return f"<User(email='{self.email}', role='{self.role}')>"
+
+

@@ -42,7 +42,7 @@ def create_booking(db: Session, booking_in: BookingCreate, customer_id: UUID, ow
 
     # Basit fiyat hesaplama (pricing_rule modelinize göre uyarlayın)
     duration_hours = (booking_in.end_time - booking_in.start_time).total_seconds() / 3600
-    total_price = duration_hours * pricing_rule.base_price # Örnek: base_price'ı kullanıyoruz
+    total_price = duration_hours * float(pricing_rule.base_price) # Örnek: base_price'ı kullanıyoruz
     
     # Müsaitlik kontrolü de burada veya router katmanında yapılabilir
     # Örneğin, crud_availability.get_available_slots_for_resource çağrılarak yerin müsait olup olmadığı kontrol edilebilir.
