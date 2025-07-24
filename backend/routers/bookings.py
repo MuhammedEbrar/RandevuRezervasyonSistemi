@@ -146,6 +146,44 @@ async def update_booking_payment_status(
     updated_booking = crud_booking.update_booking_payment_status(db, db_booking, payment_status_update)
     return updated_booking
 
+@router.put("/{booking_id}/cancel", response_model=BookingOut) # Veya BookingResponse
+async def cancel_booking(
+    booking_id: UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user) # Rezervasyon sahibi veya ilgili işletme sahibi iptal edebilir
+):
+    # 1. Rezervasyonu bul
+    db_booking = crud_booking.get_booking_by_id(db, booking_id=booking_id)
+    if not db_booking:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Rezervasyon bulunamadı.")
+
+    # 2. Yetkilendirme Kontrolü
+    # Sadece rezervasyonun sahibi (customer) veya ilgili kaynağın sahibi (business owner) iptal edebilir.
+    # ADMIN rolü varsa, o da iptal edebilir.
+    
+    is_customer = str(db_booking.customer_id) == str(current_user.user_id)
+    is_owner_of_resource = str(db_booking.owner_id) == str(current_user.user_id) # Booking modelinde owner_id varsa
+
+    if not (is_customer or is_owner_of_resource): # if not (is_customer or is_owner_of_resource or current_user.role == UserRole.ADMIN):
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Bu rezervasyonu iptal etme yetkiniz yok.")
+    
+    # 3. Rezervasyonun zaten iptal edilmiş olup olmadığını kontrol et
+    if db_booking.status == BookingStatus.CANCELLED:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Rezervasyon zaten iptal edilmiş durumda.")
+    
+    # 4. Rezervasyon durumunu CANCELLED olarak güncelle
+    # crud_bookings.update_booking_status fonksiyonunu kullanıyoruz
+    status_update_data = BookingStatusUpdate(status=BookingStatus.CANCELLED)
+    cancelled_booking = crud_booking.update_booking_status(db, booking=db_booking, status_update=status_update_data)
+    
+    # Kapora iadesi mantığı burada daha sonra eklenebilir.
+    # Örneğin: if db_booking.payment_status == PaymentStatus.PAID:
+    #             # Ödeme iade mekanizmasını çağır (mock veya gerçek)
+    #             # db_booking.payment_status = PaymentStatus.REFUNDED
+    #             # crud_bookings.update_booking_payment_status(...)
+
+    return cancelled_booking
+
 # --- Rezervasyon Silme (İşletme Sahibi/Admin) ---
 @router.delete("/{booking_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_booking(
