@@ -12,6 +12,10 @@ class ResourceType(str, enum.Enum):
     HIZMET = "HIZMET"
     MEKAN = "MEKAN"
 
+class BookingType(str, enum.Enum):
+    SLOT_BASED = "SLOT_BASED"     # Sabit slotlar (örn: 14:00, 14:30, 15:00)
+    DURATION_BASED = "DURATION_BASED" # Esnek başlangıç (örn: 14:21'de başla, 3 saat sürsün)
+
 class Resource(Base):
     __tablename__ = "resources"
 
@@ -28,6 +32,10 @@ class Resource(Base):
     cancellation_policy = Column(String, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    booking_type = Column(Enum(BookingType), nullable=False, server_default=BookingType.SLOT_BASED.value)
+    max_bookings_per_day = Column(Integer, nullable=True) # Bir günde en fazla kiralama sayısı
+    max_bookings_per_customer = Column(Integer, nullable=True) # Bir müşterinin en fazla kiralama sayısı
+
 
     # İlişkiler: back_populates'ların doğru ve eşleşen isimlere sahip olduğundan emin olun
     owner = relationship("User", back_populates="resources")
@@ -37,3 +45,5 @@ class Resource(Base):
 
     def __repr__(self):
         return f"<Resource(name='{self.name}', type='{self.type}', owner_id='{self.owner_id}')>"
+    
+

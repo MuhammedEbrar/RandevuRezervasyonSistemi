@@ -1,20 +1,27 @@
 # backend/schemas/resource.py
-from pydantic import BaseModel, Field # Field için
+
+from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional, List
 from uuid import UUID
 
-from models import ResourceType
+# DÜZELTME: Import yolu 'backend.' olmadan, doğrudan 'models'den başlıyor.
+from models.resource import ResourceType, BookingType
+
 # Resource oluşturmak için girdi şeması
 class ResourceCreate(BaseModel):
-    name: str = Field(min_length=3, max_length=100) # Kaynak adı
-    description: Optional[str] = Field(None, max_length=500) # Açıklama
-    type: ResourceType # Kaynak tipi (HIZMET veya MEKAN)
-    capacity: Optional[int] = None # Eğer MEKAN ise kapasite
-    location: Optional[dict] = None # JSON olarak konum bilgisi
-    tags: Optional[List[str]] = None # Etiketler
-    images: Optional[List[str]] = None # Resim URL'leri
-    cancellation_policy: Optional[str] = None # İptal politikası
+    name: str = Field(min_length=3, max_length=100)
+    description: Optional[str] = Field(None, max_length=500)
+    type: ResourceType
+    capacity: Optional[int] = 1 # Varsayılan kapasite 1 olabilir
+    location: Optional[dict] = None
+    tags: Optional[List[str]] = None
+    images: Optional[List[str]] = None
+    cancellation_policy: Optional[str] = None
+    # YENİ EKLENEN ALANLAR
+    booking_type: Optional[BookingType] = BookingType.SLOT_BASED
+    max_bookings_per_day: Optional[int] = None
+    max_bookings_per_customer: Optional[int] = None
 
 # Resource güncellemek için girdi şeması (tüm alanlar isteğe bağlı)
 class ResourceUpdate(BaseModel):
@@ -27,6 +34,10 @@ class ResourceUpdate(BaseModel):
     tags: Optional[List[str]] = None
     images: Optional[List[str]] = None
     cancellation_policy: Optional[str] = None
+    # YENİ EKLENEN ALANLAR
+    booking_type: Optional[BookingType] = None
+    max_bookings_per_day: Optional[int] = None
+    max_bookings_per_customer: Optional[int] = None
 
 # Resource çıktısı (API yanıtı) şeması
 class ResourceOut(BaseModel):
@@ -43,6 +54,10 @@ class ResourceOut(BaseModel):
     cancellation_policy: Optional[str] = None
     created_at: datetime
     updated_at: Optional[datetime] = None
+    # YENİ EKLENEN ALANLAR
+    booking_type: BookingType
+    max_bookings_per_day: Optional[int] = None
+    max_bookings_per_customer: Optional[int] = None
 
     class Config:
         from_attributes = True # SQLAlchemy modellerinden Pydantic modeline dönüştürme için

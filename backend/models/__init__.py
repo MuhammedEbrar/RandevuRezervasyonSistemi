@@ -3,7 +3,7 @@
 # ilişkileri doğru bir şekilde haritalamasını sağlar.
 
 from .user import User, UserRole
-from .resource import Resource, ResourceType
+from .resource import Resource, ResourceType, BookingType
 from .availability import AvailabilitySchedule, ScheduleType, DayOfWeek
 from .pricing import PricingRule, DurationType, ApplicableDay
 from .booking import Booking, BookingStatus, PaymentStatus
