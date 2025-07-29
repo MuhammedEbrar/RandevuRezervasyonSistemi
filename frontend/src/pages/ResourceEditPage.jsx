@@ -1,28 +1,20 @@
 // src/pages/ResourceEditPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { getResourceById, updateResource } from '../services/api'; // Yeni import
 
 function ResourceEditPage() {
   const { resourceId } = useParams();
   const navigate = useNavigate();
-  
-  // formData'yı başlangıçta null yapalım ki veri gelmeden formu çizmeye çalışmasın
   const [formData, setFormData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchResourceData = async () => {
-      const token = localStorage.getItem('userToken');
-      const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/resources/${resourceId}`;
       try {
-        const response = await fetch(apiUrl, {
-          headers: { 'Authorization': `Bearer ${token}` },
-        });
-        if (!response.ok) throw new Error('Veri alınamadı.');
-
-        const data = await response.json();
+        // fetch yerine api servisindeki fonksiyonu kullan
+        const data = await getResourceById(resourceId);
         
-        // Gelen veriyi state'e doldur
         setFormData({
           name: data.name || '',
           description: data.description || '',
@@ -37,7 +29,7 @@ function ResourceEditPage() {
           cancellation_policy: data.cancellation_policy || '',
         });
       } catch (error) {
-        alert('Hata oluştu: ' + error.message);
+        alert('Veri alınamadı: ' + error.message);
       } finally {
         setIsLoading(false);
       }
@@ -46,17 +38,14 @@ function ResourceEditPage() {
     fetchResourceData();
   }, [resourceId]);
 
-  // Formdaki her değişiklikte state'i güncelleyen fonksiyon
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Form gönderme fonksiyonu
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const token = localStorage.getItem('userToken');
-
+    
     const resourceToUpdate = {
         name: formData.name, description: formData.description, type: formData.type,
         capacity: formData.type === 'MEKAN' ? parseInt(formData.capacity) : null,
@@ -66,22 +55,9 @@ function ResourceEditPage() {
         cancellation_policy: formData.cancellation_policy,
     };
     
-    const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/resources/${resourceId}`;
     try {
-      const response = await fetch(apiUrl, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(resourceToUpdate),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(JSON.stringify(errorData.detail) || 'Varlık güncellenemedi.');
-      }
-      
+      // fetch yerine api servisindeki fonksiyonu kullan
+      await updateResource(resourceId, resourceToUpdate);
       alert('Varlık başarıyla güncellendi!');
       navigate('/dashboard/resources');
     } catch (error) {
@@ -89,12 +65,11 @@ function ResourceEditPage() {
     }
   };
 
-  // Veri yüklenirken veya formData henüz doldurulmamışken bekleme ekranı göster
-  if (isLoading || !formData) return <p className="text-center p-10">Yükleniyor...</p>;
+  if (isLoading || !formData) return <p>Yükleniyor...</p>;
 
   return (
     <div className="container mx-auto p-8">
-      <h1 className="text-3xl font-bold mb-6">Varlığı Düzenle: {formData.name}</h1>
+      <h1 className="text-3xl font-bold mb-6">Varlığı Düzenle</h1>
       <form onSubmit={handleSubmit} className="max-w-lg bg-white p-8 shadow-md rounded-lg space-y-4">
         <div>
           <label className="block text-gray-700 font-bold mb-2" htmlFor="name">Varlık Adı</label>
@@ -150,4 +125,3 @@ function ResourceEditPage() {
 }
 
 export default ResourceEditPage;
-

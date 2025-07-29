@@ -1,9 +1,8 @@
 // src/components/RegisterForm.jsx
-
 import React, { useState } from 'react';
+import { registerUser } from '../services/api'; // Yeni import
 
 const RegisterForm = () => {
-  // 1. Tüm inputlar için state'leri tanımla
   const [role, setRole] = useState('BUSINESS_OWNER');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -15,10 +14,9 @@ const RegisterForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Şifrelerin eşleşip eşleşmediğini kontrol et
     if (password !== confirmPassword) {
       alert("Şifreler eşleşmiyor!");
-      return; // Fonksiyonu burada durdur
+      return;
     }
 
     const newUser = {
@@ -27,39 +25,23 @@ const RegisterForm = () => {
       phone_number: phone,
       email: email,
       password: password,
-      role: role, // 'BUSINESS_OWNER' veya 'CUSTOMER'
+      role: role,
     };
 
-    console.log("Gönderilecek Yeni Kullanıcı Verisi:", newUser);
-
     try {
-      // Backend'deki /auth/register endpoint'ine istek gönder
-      const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/auth/register`;
-      const response = await fetch(apiUrl,  //orjinal satır bu
-      {   
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newUser),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        alert(`Kayıt Başarısız: ${data.detail || 'Bilinmeyen bir hata oluştu.'}`);
-      } else {
-        alert('Kayıt Başarılı! Şimdi giriş yapabilirsiniz.');
-        // İsteğe bağlı: Kullanıcıyı giriş sekmesine yönlendirebiliriz.
-      }
+      // Karmaşık fetch bloğu yerine tek satırlık fonksiyon çağrısı
+      await registerUser(newUser);
+      alert('Kayıt Başarılı! Şimdi giriş yapabilirsiniz.');
+      // İsteğe bağlı: Kullanıcıyı otomatik olarak giriş sekmesine yönlendirebiliriz
+      // veya formu temizleyebiliriz.
     } catch (error) {
-      alert('Sunucuya bağlanılamıyor.');
+      alert(`Kayıt Başarısız: ${error.message}`);
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-        {/* İŞ YERİ / MÜŞTERİ BUTONLARI (EKSİK OLAN KISIM) */}
+        {/* İŞ YERİ / MÜŞTERİ BUTONLARI */}
         <div className="bg-gray-200 p-1 rounded-full relative flex w-full mb-6">
             <div
                 className="absolute bg-white shadow-md w-1/2 h-full rounded-full transition-transform duration-300 ease-in-out"
@@ -69,7 +51,7 @@ const RegisterForm = () => {
             <button type="button" onClick={() => setRole('CUSTOMER')} className="relative w-1/2 py-2 text-center z-10 font-semibold text-gray-700">MÜŞTERİ</button>
         </div>
 
-        {/* Form Alanları (value ve onChange eklendi) */}
+        {/* Form Alanları */}
         <div className="grid grid-cols-2 gap-4 mb-4">
             <input value={firstName} onChange={(e) => setFirstName(e.target.value)} className="p-3 bg-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="İsim" required/>
             <input value={email} onChange={(e) => setEmail(e.target.value)} className="p-3 bg-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" type="email" placeholder="e-mail" required/>

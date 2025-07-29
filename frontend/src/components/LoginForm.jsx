@@ -1,7 +1,7 @@
 // src/components/LoginForm.jsx
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../services/api'; // Yeni import
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -11,34 +11,17 @@ const LoginForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/auth/login`;
-      const response = await fetch(apiUrl,  //orjinal satır bu
-        {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-          'username': email,
-          'password': password,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        alert(`Giriş Başarısız: ${data.detail || 'Bilinmeyen bir hata oluştu.'}`);
-      } else {
-        localStorage.setItem('userToken', data.access_token);
-        navigate('/dashboard'); // Yönlendirme
-      }
+      // Karmaşık fetch bloğu yerine tek satırlık fonksiyon çağrısı
+      const data = await loginUser(email, password);
+      
+      localStorage.setItem('userToken', data.access_token);
+      navigate('/dashboard');
     } catch (error) {
-      console.error('Sunucuya bağlanırken bir hata oluştu:', error);
-      alert('Sunucuya bağlanılamıyor. Backend\'in çalıştığından emin misin?');
+      // api.js'ten fırlatılan hata mesajını burada yakalıyoruz
+      alert(`Giriş Başarısız: ${error.message}`);
     }
   };
 
-  // EKSİK OLAN JSX KISMI BURADA
   return (
     <form onSubmit={handleSubmit}>
       <div className="mb-4">

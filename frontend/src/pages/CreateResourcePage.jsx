@@ -1,65 +1,44 @@
 // src/pages/CreateResourcePage.jsx
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createResource } from '../services/api'; // Yeni import
 
 function CreateResourcePage() {
-  // Mevcut state'ler
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [type, setType] = useState('HIZMET');
   const [capacity, setCapacity] = useState(1);
-  
-  // --- YENİ STATE'LER ---
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [country, setCountry] = useState('');
   const [zipCode, setZipCode] = useState('');
-  const [tags, setTags] = useState(''); // Virgülle ayrılmış metin olarak alacağız
-  const [images, setImages] = useState(''); // Virgülle ayrılmış URL'ler olarak alacağız
+  const [tags, setTags] = useState('');
+  const [images, setImages] = useState('');
   const [cancellationPolicy, setCancellationPolicy] = useState('');
-
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // --- GÖNDERİLECEK OBJEYİ GÜNCELLE ---
     const newResource = {
       name,
       description,
       type,
       capacity: type === 'MEKAN' ? capacity : null,
-      location: { // Konum objesini oluştur
+      location: {
         address,
         city,
         country,
         zip_code: zipCode,
       },
-      // Metinleri diziye çevir
       tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag),
       images: images.split(',').map(img => img.trim()).filter(img => img),
       cancellation_policy: cancellationPolicy,
     };
     
-    const token = localStorage.getItem('userToken');
-
     try {
-      const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/resources/`;
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(newResource),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(JSON.stringify(errorData.detail));
-      }
-
+      // Karmaşık fetch bloğu yerine tek satırlık fonksiyon çağrısı
+      await createResource(newResource);
       alert('Varlık başarıyla oluşturuldu!');
       navigate('/dashboard/resources');
     } catch (error) {
@@ -71,7 +50,6 @@ function CreateResourcePage() {
     <div className="container mx-auto p-8">
       <h1 className="text-3xl font-bold mb-6">Yeni Varlık Ekle</h1>
       <form onSubmit={handleSubmit} className="max-w-lg bg-white p-8 shadow-md rounded-lg space-y-4">
-        {/* İsim, Açıklama, Tip ve Kapasite alanları aynı kalıyor... */}
         <div>
           <label className="block text-gray-700 font-bold mb-2" htmlFor="name">Varlık Adı</label>
           <input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full p-2 border rounded" required />
@@ -94,7 +72,6 @@ function CreateResourcePage() {
           </div>
         )}
         
-        {/* --- YENİ FORM ALANLARI --- */}
         <hr/>
         <p className="font-bold text-gray-700">Konum Bilgileri</p>
         <div>

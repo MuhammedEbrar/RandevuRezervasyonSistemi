@@ -1,0 +1,40 @@
+# RandevuRezervasyonSistemi/docker-compose.yml 
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: randevu_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_USER: randevuuser
+      POSTGRES_PASSWORD: MEKPostgreSQL22003
+      POSTGRES_DB: randevuplatformu_db
+    ports:
+      - "5432:5432"
+
+  api:
+    container_name: randevu_api
+    build:
+      context: ./backend
+    env_file:
+      - ./.env
+    environment:
+      - DATABASE_URL=postgresql://randevuuser:MEKPostgreSQL22003@db:5432/randevuplatformu_db
+    depends_on:
+      - db
+    
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: randevu_nginx
+    ports:
+      - "80:80"
+    volumes:
+      # DÜZELTME: Yol 'build' yerine 'dist' olarak değiştirildi.
+      - ./frontend/dist:/usr/share/nginx/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
