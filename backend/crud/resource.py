@@ -11,6 +11,13 @@ from schemas.resource import ResourceCreate, ResourceUpdate # Girdi şemaları
 def get_resource_by_id(db: Session, resource_id: UUID) -> Optional[Resource]:
     return db.query(Resource).filter(Resource.resource_id == resource_id).first()
 
+# Tüm kaynakları listele (müşteriler için - aktif olanlar)
+def get_resources(db: Session, skip: int = 0, limit: int = 100, active_only: bool = True) -> List[Resource]:
+    query = db.query(Resource)
+    if active_only:
+        query = query.filter(Resource.is_active == True)
+    return query.offset(skip).limit(limit).all()
+
 # Bir işletme sahibinin tüm kaynaklarını listele
 def get_resources_by_owner(db: Session, owner_id: UUID, skip: int = 0, limit: int = 100) -> List[Resource]:
     # Multi-tenancy için owner_id ile filtreleme çok kritik!

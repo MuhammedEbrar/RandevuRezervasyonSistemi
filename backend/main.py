@@ -12,9 +12,10 @@ app = FastAPI(
 )
 
 # --- CORS Ayarları ---
+# Environment-based CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Geliştirme için her yerden gelen isteğe izin ver
+    allow_origins=settings.cors_origins_list,  # Environment-based origins
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
