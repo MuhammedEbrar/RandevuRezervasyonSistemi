@@ -7,9 +7,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      POSTGRES_USER: randevuuser
-      POSTGRES_PASSWORD: MEKPostgreSQL22003
-      POSTGRES_DB: randevuplatformu_db
+      POSTGRES_USER: ${POSTGRES_USER:-randevuuser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-RandevuDB2025!SecurePass}
+      POSTGRES_DB: ${POSTGRES_DB:-randevuplatformu_db}
     ports:
       - "5432:5432"
 
@@ -20,7 +20,7 @@ services:
     env_file:
       - ./.env
     environment:
-      - DATABASE_URL=postgresql://randevuuser:MEKPostgreSQL22003@db:5432/randevuplatformu_db
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-randevuuser}:${POSTGRES_PASSWORD:-RandevuDB2025!SecurePass}@db:5432/${POSTGRES_DB:-randevuplatformu_db}
     depends_on:
       - db
     

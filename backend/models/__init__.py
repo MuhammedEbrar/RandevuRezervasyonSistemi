@@ -6,8 +6,7 @@ from .user import User, UserRole
 from .resource import Resource, ResourceType, BookingType
 from .availability import AvailabilitySchedule, ScheduleType, DayOfWeek
 from .pricing import PricingRule, DurationType, ApplicableDay
-from .booking import Booking, BookingStatus, PaymentStatus
-from .booking import Booking, BookingStatus, PaymentStatus # Booking modelini ve BookingStatus, PaymentStatus enum'larını import ediyorsunuz
+from .booking import Booking, BookingStatus
 from .payment import Payment, PaymentStatus
 
 

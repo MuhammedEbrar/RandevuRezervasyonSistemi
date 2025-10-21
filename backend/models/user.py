@@ -25,12 +25,11 @@ class User(Base):
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    payments_made = relationship("Payment", back_populates="customer")
 
     # İlişkiler: back_populates'ların doğru ve eşleşen isimlere sahip olduğundan emin olun
     resources = relationship("Resource", back_populates="owner")
     pricing_rules = relationship("PricingRule", back_populates="owner")
-    availability_schedules = relationship("AvailabilitySchedule", back_populates="owner") # BURASI KRİTİK!
+    availability_schedules = relationship("AvailabilitySchedule", back_populates="owner")
     bookings_as_customer = relationship("Booking", foreign_keys="[Booking.customer_id]", back_populates="customer")
     bookings_as_owner = relationship("Booking", foreign_keys="[Booking.owner_id]", back_populates="owner")
     payments_made = relationship("Payment", back_populates="customer")
