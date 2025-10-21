@@ -10,6 +10,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-randevuuser}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-RandevuDB2025SecurePass}
       POSTGRES_DB: ${POSTGRES_DB:-randevuplatformu_db}
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
     ports:
       - "5432:5432"
 
