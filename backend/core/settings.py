@@ -1,15 +1,7 @@
 # backend/core/settings.py
 # Bu dosya, uygulamanın ayarlarını (veritabanı URL'si, JWT anahtarı vb.) yönetir.
 
-import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pathlib import Path
-from dotenv import load_dotenv
-
-# Load environment variables from .env file
-# The .env file is located in the project root (two levels up from this file)
-load_dotenv(dotenv_path=Path(__file__).resolve().parents[2] / '.env')
-
 
 
 class Settings(BaseSettings):
