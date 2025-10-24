@@ -31,7 +31,11 @@ async def initiate_payment(
     current_user: User = Depends(get_current_user)
 ):
     # 1. Rezervasyonun varlığını ve durumunu kontrol et
-    db_booking = crud_bookings.get_booking_by_id(db, payment_request.booking_id)
+    # CONCURRENCY KORUMASI: with_for_update() ile rezervasyonu kilitle
+    # Bu, aynı rezervasyon için eşzamanlı ödeme işlemlerini engeller
+    from models.booking import Booking
+    db_booking = db.query(Booking).filter(Booking.booking_id == payment_request.booking_id).with_for_update().first()
+
     if not db_booking:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Ödeme yapılmak istenen rezervasyon bulunamadı.")
 

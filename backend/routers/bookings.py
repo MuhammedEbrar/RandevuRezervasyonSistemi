@@ -64,6 +64,19 @@ async def create_booking(
     if booking_in.end_time <= booking_in.start_time:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Bitiş zamanı başlangıç zamanından sonra olmalıdır.")
 
+    # ÇAKIŞMA KONTROLÜ - Çifte rezervasyonu önle
+    conflicting_bookings = crud_bookings.check_booking_conflicts(
+        db=db,
+        resource_id=booking_in.resource_id,
+        start_time=booking_in.start_time,
+        end_time=booking_in.end_time
+    )
+    if conflicting_bookings:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"Bu zaman diliminde {len(conflicting_bookings)} adet çakışan rezervasyon bulunmaktadır. Lütfen farklı bir zaman seçiniz."
+        )
+
     # 1. Geçerli Fiyat Kuralını Bul
     applicable_rule = crud_pricing.get_applicable_pricing_rule(db, db_resource.resource_id, booking_in.start_time, booking_in.end_time)
     if not applicable_rule:

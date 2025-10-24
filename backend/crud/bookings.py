@@ -78,3 +78,91 @@ def delete_booking(db: Session, booking_id: UUID) -> Optional[UUID]:
         db.commit()
         return booking_id
     return None
+
+def check_booking_conflicts(
+    db: Session,
+    resource_id: UUID,
+    start_time: datetime,
+    end_time: datetime,
+    exclude_booking_id: Optional[UUID] = None
+) -> List[Booking]:
+    """
+    Belirli bir kaynak ve zaman dilimi için çakışan rezervasyonları kontrol eder.
+
+    Args:
+        db: Veritabanı oturumu
+        resource_id: Kontrol edilecek kaynak ID'si
+        start_time: Başlangıç zamanı
+        end_time: Bitiş zamanı
+        exclude_booking_id: İsteğe bağlı - güncelleme sırasında hariç tutulacak rezervasyon ID'si
+
+    Returns:
+        Çakışan rezervasyonların listesi
+    """
+    query = db.query(Booking).filter(
+        Booking.resource_id == resource_id,
+        Booking.status.in_([BookingStatus.CONFIRMED, BookingStatus.PENDING]),
+        # Zaman çakışması kontrolü: yeni rezervasyonun başlangıcı mevcut bir rezervasyonun içinde
+        # VEYA yeni rezervasyonun bitişi mevcut bir rezervasyonun içinde
+        # VEYA yeni rezervasyon mevcut rezervasyonu tamamen kapsıyor
+        (
+            (Booking.start_time < end_time) & (Booking.end_time > start_time)
+        )
+    )
+
+    # Güncelleme durumunda mevcut rezervasyonu hariç tut
+    if exclude_booking_id:
+        query = query.filter(Booking.booking_id != exclude_booking_id)
+
+    return query.all()
+
+def get_bookings_by_resource(
+    db: Session,
+    resource_id: UUID,
+    skip: int = 0,
+    limit: int = 100,
+    active_only: bool = True
+) -> List[Booking]:
+    """
+    Belirli bir kaynağa ait rezervasyonları listeler.
+
+    Args:
+        db: Veritabanı oturumu
+        resource_id: Kaynak ID'si
+        skip: Kaç kayıt atlanacak
+        limit: Maksimum kaç kayıt döndürülecek
+        active_only: Sadece aktif (CONFIRMED, PENDING) rezervasyonlar mı?
+
+    Returns:
+        Rezervasyon listesi
+    """
+    query = db.query(Booking).filter(Booking.resource_id == resource_id)
+
+    if active_only:
+        query = query.filter(Booking.status.in_([BookingStatus.CONFIRMED, BookingStatus.PENDING]))
+
+    return query.offset(skip).limit(limit).all()
+
+def get_booking_by_resource_and_timerange(
+    db: Session,
+    resource_id: UUID,
+    start_time: datetime,
+    end_time: datetime
+) -> List[Booking]:
+    """
+    Belirli bir kaynak ve zaman aralığındaki rezervasyonları getirir.
+
+    Args:
+        db: Veritabanı oturumu
+        resource_id: Kaynak ID'si
+        start_time: Başlangıç zamanı
+        end_time: Bitiş zamanı
+
+    Returns:
+        Belirtilen zaman aralığındaki rezervasyonlar
+    """
+    return db.query(Booking).filter(
+        Booking.resource_id == resource_id,
+        Booking.start_time >= start_time,
+        Booking.end_time <= end_time
+    ).all()

@@ -70,3 +70,4 @@ export const getAvailableSlots = (resourceId, dateString) => apiFetch(`/resource
 export const calculatePrice = (resourceId, startTime, endTime) => apiFetch('/bookings/calculate_price', { method: 'POST', body: JSON.stringify({ resource_id: resourceId, start_time: startTime, end_time: endTime }) });
 export const createBooking = (bookingData) => apiFetch('/bookings/', { method: 'POST', body: JSON.stringify(bookingData) });
 export const getMyBookings = () => apiFetch('/bookings/customer');
+export const cancelBooking = (bookingId) => apiFetch(`/bookings/${bookingId}/cancel`, { method: 'PUT' });

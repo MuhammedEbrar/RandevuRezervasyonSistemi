@@ -49,7 +49,11 @@ class Booking(Base):
     resource = relationship("Resource", back_populates="bookings")
     customer = relationship("User", foreign_keys=[customer_id], back_populates="bookings_as_customer")
     owner = relationship("User", foreign_keys=[owner_id], back_populates="bookings_as_owner")
-    parent_booking = relationship("Booking", remote_side=[booking_id]) # Self-referencing ilişki
+
+    # Self-referencing ilişki: parent ve child bookings (tekrarlayan rezervasyonlar için)
+    parent_booking = relationship("Booking", remote_side=[booking_id], back_populates="child_bookings")
+    child_bookings = relationship("Booking", back_populates="parent_booking", cascade="all, delete-orphan")
+
     payment = relationship("Payment", uselist=False, back_populates="booking") # uselist=False çünkü bir rezervasyonun tek bir ödemesi olur
 
     def __repr__(self):
