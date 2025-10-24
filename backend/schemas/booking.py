@@ -1,11 +1,12 @@
 # backend/schemas/booking.py
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator, model_validator
 from uuid import UUID
-from datetime import datetime, time, date
+from datetime import datetime, time, date, timedelta
 from typing import Optional, List
 from decimal import Decimal # Total price ve deposit amount için
 
 from models import BookingStatus, PaymentStatus
+
 # Booking oluşturmak için girdi şeması
 class BookingCreate(BaseModel):
     resource_id: UUID
@@ -16,11 +17,39 @@ class BookingCreate(BaseModel):
     # total_price ve deposit_amount hesaplanacağı için burada yer almaz
     # status ve payment_status başlangıçta PENDING olarak ayarlanır
 
+    @field_validator('start_time')
+    @classmethod
+    def validate_start_time(cls, v: datetime) -> datetime:
+        """Başlangıç zamanı gelecekte olmalı"""
+        if v < datetime.now():
+            raise ValueError('Rezervasyon başlangıç zamanı geçmişte olamaz')
+        return v
+
+    @model_validator(mode='after')
+    def validate_time_range(self):
+        """Bitiş zamanı başlangıç zamanından sonra olmalı ve maksimum 1 yıl olmalı"""
+        if self.end_time <= self.start_time:
+            raise ValueError('Rezervasyon bitiş zamanı başlangıç zamanından sonra olmalıdır')
+
+        # Makul bir zaman aralığı kontrolü (maksimum 1 yıl)
+        duration = self.end_time - self.start_time
+        if duration > timedelta(days=365):
+            raise ValueError('Rezervasyon süresi 1 yıldan uzun olamaz')
+
+        return self
+
 # Fiyat hesaplama isteği için şema (pricing router'da kullanılabilir)
 class BookingCalculatePriceRequest(BaseModel):
     resource_id: UUID
     start_time: datetime
     end_time: datetime
+
+    @model_validator(mode='after')
+    def validate_time_range(self):
+        """Bitiş zamanı başlangıç zamanından sonra olmalı"""
+        if self.end_time <= self.start_time:
+            raise ValueError('Bitiş zamanı başlangıç zamanından sonra olmalıdır')
+        return self
 
 # Fiyat yanıtı için şema (pricing router'dan dönecek)
 class BookingCalculatePriceResponse(BaseModel):

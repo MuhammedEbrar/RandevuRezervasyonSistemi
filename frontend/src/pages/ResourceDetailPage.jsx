@@ -123,10 +123,25 @@ function ResourceDetailPage() {
     <div className="container mx-auto p-8">
       {resource.images && resource.images.length > 0 && (
          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-            <img src={resource.images[0]} alt={resource.name} className="w-full h-96 object-cover rounded-lg shadow-lg"/>
+            <img
+              src={resource.images[0].startsWith('/')
+                ? `${import.meta.env.VITE_API_BASE_URL}${resource.images[0]}`
+                : resource.images[0]
+              }
+              alt={resource.name}
+              className="w-full h-96 object-cover rounded-lg shadow-lg"
+            />
             <div className="hidden md:grid grid-cols-2 gap-4">
                 {resource.images.slice(1, 5).map((img, index) => (
-                    <img key={index} src={img} alt={`${resource.name} ${index + 2}`} className="w-full h-full object-cover rounded-lg shadow-md"/>
+                    <img
+                      key={index}
+                      src={img.startsWith('/')
+                        ? `${import.meta.env.VITE_API_BASE_URL}${img}`
+                        : img
+                      }
+                      alt={`${resource.name} ${index + 2}`}
+                      className="w-full h-full object-cover rounded-lg shadow-md"
+                    />
                 ))}
             </div>
         </div>
