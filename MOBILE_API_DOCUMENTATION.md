@@ -553,15 +553,4 @@ Password: RandevuDB2025SecurePass
 - **API Interactive Docs:** http://13.60.31.19/docs
 - **Frontend Demo:** http://13.60.31.19/
 
----
 
-## 📞 İletişim
-
-Sorularınız için:
-- Backend Developer: [İletişim Bilgisi]
-- API Issues: GitHub Issues
-
----
-
-**Son Güncelleme:** 2025-10-23
-**API Version:** 1.0.0
