@@ -3,13 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { 
-  getResourceById, 
-  getAvailableSlots, 
-  calculatePrice, 
-  createBooking 
+import {
+  getResourceById,
+  getAvailableSlots,
+  calculatePrice,
+  createBooking
 } from '../services/api';
 import { useAuth } from '../hooks/useAuth';
+import Navbar from '../components/Navbar';
 
 function ResourceDetailPage() {
   const { resourceId } = useParams();
@@ -116,11 +117,27 @@ function ResourceDetailPage() {
     }
   };
 
-  if (isLoading) return <p>Yükleniyor...</p>;
-  if (!resource) return <p>Varlık bulunamadı.</p>;
+  if (isLoading) return (
+    <>
+      <Navbar />
+      <div className="text-center p-20">
+        <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <p className="mt-4 text-gray-600">Yükleniyor...</p>
+      </div>
+    </>
+  );
+
+  if (!resource) return (
+    <>
+      <Navbar />
+      <div className="text-center p-10 text-red-500">Varlık bulunamadı.</div>
+    </>
+  );
 
   return (
-    <div className="container mx-auto p-8">
+    <>
+      <Navbar />
+      <div className="container mx-auto p-8">
       {resource.images && resource.images.length > 0 && (
          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
             <img
@@ -196,6 +213,7 @@ function ResourceDetailPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 

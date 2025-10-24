@@ -13,9 +13,17 @@ const LoginForm = () => {
     try {
       // Karmaşık fetch bloğu yerine tek satırlık fonksiyon çağrısı
       const data = await loginUser(email, password);
-      
+
+      // Token ve user bilgilerini kaydet
       localStorage.setItem('userToken', data.access_token);
-      navigate('/dashboard');
+      localStorage.setItem('userInfo', JSON.stringify(data.user));
+
+      // Role'e göre yönlendirme
+      if (data.user.role === 'BUSINESS_OWNER') {
+        navigate('/dashboard'); // İşletme sahibi dashboard'a gider
+      } else {
+        navigate('/resources'); // Müşteri hizmet listesine gider
+      }
     } catch (error) {
       // api.js'ten fırlatılan hata mesajını burada yakalıyoruz
       alert(`Giriş Başarısız: ${error.message}`);
