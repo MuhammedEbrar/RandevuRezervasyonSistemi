@@ -81,4 +81,14 @@ async def login_for_access_token(
     }
     access_token = create_access_token(access_token_data)
 
-    return {"access_token": access_token, "token_type": "bearer"}
+    # User bilgilerini de response'a ekle (frontend yönlendirme için role bilgisine ihtiyaç duyar)
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": {
+            "user_id": str(user.user_id),
+            "email": user.email,
+            "full_name": user.full_name,
+            "role": user.role.value
+        }
+    }

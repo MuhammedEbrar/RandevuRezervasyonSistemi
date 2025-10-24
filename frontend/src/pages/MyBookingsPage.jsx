@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getMyBookings, cancelBooking } from '../services/api';
+import Navbar from '../components/Navbar';
 
 function MyBookingsPage() {
   const [bookings, setBookings] = useState([]);
@@ -92,38 +93,43 @@ function MyBookingsPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto p-8">
-        <div className="text-center py-20">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          <p className="mt-4 text-gray-600">Rezervasyonlarınız yükleniyor...</p>
+      <>
+        <Navbar />
+        <div className="container mx-auto p-8">
+          <div className="text-center py-20">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <p className="mt-4 text-gray-600">Rezervasyonlarınız yükleniyor...</p>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
   if (error) {
     return (
-      <div className="container mx-auto p-8">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-          <div className="text-red-600 text-5xl mb-4">⚠</div>
-          <h2 className="text-xl font-semibold text-red-800 mb-2">Hata</h2>
-          <p className="text-red-600 mb-4">{error}</p>
-          <Link to="/dashboard" className="inline-block bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700">
-            Dashboard'a Dön
-          </Link>
+      <>
+        <Navbar />
+        <div className="container mx-auto p-8">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+            <div className="text-red-600 text-5xl mb-4">⚠</div>
+            <h2 className="text-xl font-semibold text-red-800 mb-2">Hata</h2>
+            <p className="text-red-600 mb-4">{error}</p>
+            <Link to="/resources" className="inline-block bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700">
+              Ana Sayfaya Dön
+            </Link>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="container mx-auto p-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Rezervasyonlarım</h1>
-        <Link to="/dashboard" className="text-blue-600 hover:text-blue-800 hover:underline flex items-center">
-          <span className="mr-1">←</span> Dashboard'a Dön
-        </Link>
-      </div>
+    <>
+      <Navbar />
+      <div className="container mx-auto p-8">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold text-gray-800">Rezervasyonlarım</h1>
+        </div>
 
       {bookings.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-lg shadow-md">
@@ -217,6 +223,7 @@ function MyBookingsPage() {
         </div>
       )}
     </div>
+    </>
   );
 }
 
