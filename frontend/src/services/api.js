@@ -41,15 +41,15 @@ const apiFetch = async (endpoint, options = {}) => {
 
 // --- AUTH ENDPOINTS ---
 export const loginUser = async (email, password) => {
-    const response = await fetch(`${API_URL}/auth/login`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'ngrok-skip-browser-warning': 'true',
-        },
-        body: new URLSearchParams({ 'username': email, 'password': password }),
-    });
-    return handleResponse(response);
+  const response = await fetch(`${API_URL}/auth/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'ngrok-skip-browser-warning': 'true',
+    },
+    body: new URLSearchParams({ 'username': email, 'password': password }),
+  });
+  return handleResponse(response);
 };
 export const registerUser = (userData) => apiFetch('/auth/register', { method: 'POST', body: JSON.stringify(userData) });
 
@@ -59,6 +59,11 @@ export const getResourceById = (resourceId) => apiFetch(`/resources/${resourceId
 export const createResource = (resourceData) => apiFetch('/resources/', { method: 'POST', body: JSON.stringify(resourceData) });
 export const updateResource = (resourceId, resourceData) => apiFetch(`/resources/${resourceId}`, { method: 'PUT', body: JSON.stringify(resourceData) });
 export const deleteResource = (resourceId) => apiFetch(`/resources/${resourceId}`, { method: 'DELETE' });
+
+// --- PRICING ENDPOINTS ---
+export const getPricingRules = (resourceId) => apiFetch(`/resources/${resourceId}/pricing/`);
+export const createPricingRule = (resourceId, ruleData) => apiFetch(`/resources/${resourceId}/pricing/`, { method: 'POST', body: JSON.stringify(ruleData) });
+export const deletePricingRule = (resourceId, ruleId) => apiFetch(`/resources/${resourceId}/pricing/${ruleId}`, { method: 'DELETE' });
 
 // --- AVAILABILITY ENDPOINTS --- (İSİMLER DÜZELTİLDİ)
 export const getAvailability = (resourceId) => apiFetch(`/resources/${resourceId}/availability/`);

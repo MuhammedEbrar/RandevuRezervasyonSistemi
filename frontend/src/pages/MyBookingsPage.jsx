@@ -131,98 +131,98 @@ function MyBookingsPage() {
           <h1 className="text-3xl font-bold text-gray-800">Rezervasyonlarım</h1>
         </div>
 
-      {bookings.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-lg shadow-md">
-          <div className="text-gray-400 text-6xl mb-4">📅</div>
-          <p className="text-gray-600 text-lg mb-6">Henüz hiç rezervasyon yapmadınız.</p>
-          <p className="text-gray-500 mb-6">Hizmet ve mekanları keşfederek rezervasyon yapabilirsiniz!</p>
-          <button
-            onClick={() => navigate('/resources')}
-            className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 font-semibold shadow-md transition-colors"
-          >
-            Hizmet ve Mekanları Keşfet
-          </button>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {bookings.map(booking => (
-            <div
-              key={booking.booking_id}
-              className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow border border-gray-200"
+        {bookings.length === 0 ? (
+          <div className="text-center py-16 bg-white rounded-lg shadow-md">
+            <div className="text-gray-400 text-6xl mb-4">📅</div>
+            <p className="text-gray-600 text-lg mb-6">Henüz hiç rezervasyon yapmadınız.</p>
+            <p className="text-gray-500 mb-6">Hizmet ve mekanları keşfederek rezervasyon yapabilirsiniz!</p>
+            <button
+              onClick={() => navigate('/resources')}
+              className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 font-semibold shadow-md transition-colors"
             >
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                {/* Sol taraf - Rezervasyon Bilgileri */}
-                <div className="flex-grow">
-                  <h3 className="font-bold text-xl text-gray-800 mb-2">
-                    {booking.resource.name}
-                  </h3>
+              Hizmet ve Mekanları Keşfet
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {bookings.map(booking => (
+              <div
+                key={booking.booking_id}
+                className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow border border-gray-200"
+              >
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                  {/* Sol taraf - Rezervasyon Bilgileri */}
+                  <div className="flex-grow">
+                    <h3 className="font-bold text-xl text-gray-800 mb-2">
+                      {booking.resource?.name || 'Bilinmeyen Hizmet'}
+                    </h3>
 
-                  <div className="space-y-1 text-sm text-gray-600">
-                    <div className="flex items-center">
-                      <span className="font-semibold mr-2">📅 Başlangıç:</span>
-                      <span>{formatDateTime(booking.start_time)}</span>
-                    </div>
-
-                    {booking.end_time && (
+                    <div className="space-y-1 text-sm text-gray-600">
                       <div className="flex items-center">
-                        <span className="font-semibold mr-2">📅 Bitiş:</span>
-                        <span>{formatDateTime(booking.end_time)}</span>
+                        <span className="font-semibold mr-2">📅 Başlangıç:</span>
+                        <span>{formatDateTime(booking.start_time)}</span>
                       </div>
-                    )}
 
-                    <div className="flex items-center mt-2">
-                      <span className="font-semibold mr-2">💰 Toplam Ücret:</span>
-                      <span className="text-lg font-bold text-green-600">
-                        {booking.total_price} TL
-                      </span>
+                      {booking.end_time && (
+                        <div className="flex items-center">
+                          <span className="font-semibold mr-2">📅 Bitiş:</span>
+                          <span>{formatDateTime(booking.end_time)}</span>
+                        </div>
+                      )}
+
+                      <div className="flex items-center mt-2">
+                        <span className="font-semibold mr-2">💰 Toplam Ücret:</span>
+                        <span className="text-lg font-bold text-green-600">
+                          {booking.total_price} TL
+                        </span>
+                      </div>
+
+                      {booking.notes && (
+                        <div className="flex items-start mt-2">
+                          <span className="font-semibold mr-2">📝 Not:</span>
+                          <span className="text-gray-500">{booking.notes}</span>
+                        </div>
+                      )}
                     </div>
+                  </div>
 
-                    {booking.notes && (
-                      <div className="flex items-start mt-2">
-                        <span className="font-semibold mr-2">📝 Not:</span>
-                        <span className="text-gray-500">{booking.notes}</span>
-                      </div>
+                  {/* Sağ taraf - Durum ve Aksiyonlar */}
+                  <div className="flex flex-col items-end gap-3">
+                    <span className={`px-4 py-2 text-sm font-semibold rounded-full ${getStatusStyle(booking.status)}`}>
+                      {statusTranslations[booking.status] || booking.status}
+                    </span>
+
+                    {(booking.status === 'CONFIRMED' || booking.status === 'PENDING') && (
+                      <button
+                        onClick={() => handleCancelBooking(booking.booking_id)}
+                        disabled={cancellingId === booking.booking_id}
+                        className={`px-4 py-2 rounded-lg font-semibold text-sm transition-colors
+                        ${cancellingId === booking.booking_id
+                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                            : 'bg-red-600 text-white hover:bg-red-700'
+                          }`}
+                      >
+                        {cancellingId === booking.booking_id ? 'İptal Ediliyor...' : '🚫 Rezervasyonu İptal Et'}
+                      </button>
                     )}
                   </div>
                 </div>
-
-                {/* Sağ taraf - Durum ve Aksiyonlar */}
-                <div className="flex flex-col items-end gap-3">
-                  <span className={`px-4 py-2 text-sm font-semibold rounded-full ${getStatusStyle(booking.status)}`}>
-                    {statusTranslations[booking.status] || booking.status}
-                  </span>
-
-                  {(booking.status === 'CONFIRMED' || booking.status === 'PENDING') && (
-                    <button
-                      onClick={() => handleCancelBooking(booking.booking_id)}
-                      disabled={cancellingId === booking.booking_id}
-                      className={`px-4 py-2 rounded-lg font-semibold text-sm transition-colors
-                        ${cancellingId === booking.booking_id
-                          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                          : 'bg-red-600 text-white hover:bg-red-700'
-                        }`}
-                    >
-                      {cancellingId === booking.booking_id ? 'İptal Ediliyor...' : '🚫 Rezervasyonu İptal Et'}
-                    </button>
-                  )}
-                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
 
-      {bookings.length > 0 && (
-        <div className="mt-8 text-center">
-          <button
-            onClick={() => navigate('/resources')}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-semibold transition-colors"
-          >
-            Yeni Rezervasyon Yap
-          </button>
-        </div>
-      )}
-    </div>
+        {bookings.length > 0 && (
+          <div className="mt-8 text-center">
+            <button
+              onClick={() => navigate('/resources')}
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-semibold transition-colors"
+            >
+              Yeni Rezervasyon Yap
+            </button>
+          </div>
+        )}
+      </div>
     </>
   );
 }

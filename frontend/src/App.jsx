@@ -8,6 +8,7 @@ import ResourceEditPage from './pages/ResourceEditPage';
 import AvailabilityPage from './pages/AvailabilityPage';
 import ResourceDetailPage from './pages/ResourceDetailPage';
 import MyBookingsPage from './pages/MyBookingsPage';
+import PricingPage from './pages/PricingPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
       <Route path="/dashboard/resources/new" element={<ProtectedRoute><CreateResourcePage /></ProtectedRoute>} />
       <Route path="/dashboard/resources/edit/:resourceId" element={<ProtectedRoute><ResourceEditPage /></ProtectedRoute>} />
       <Route path="/dashboard/resources/availability/:resourceId" element={<ProtectedRoute><AvailabilityPage /></ProtectedRoute>} />
+      <Route path="/dashboard/resources/pricing/:resourceId" element={<ProtectedRoute><PricingPage /></ProtectedRoute>} />
 
       {/* Varsayılan Yönlendirme */}
       <Route path="*" element={token ? <Navigate to="/resources" /> : <Navigate to="/login" />} />

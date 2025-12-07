@@ -1,9 +1,9 @@
 # backend/crud/bookings.py
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from typing import Optional, List
 from uuid import UUID
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy.exc import IntegrityError
 from decimal import Decimal
 
@@ -22,11 +22,11 @@ def get_booking_by_id(db: Session, booking_id: UUID) -> Optional[Booking]:
 
 def get_bookings_by_customer(db: Session, customer_id: UUID, skip: int = 0, limit: int = 100) -> List[Booking]:
     """Bir müşteriye ait tüm rezervasyonları listeler."""
-    return db.query(Booking).filter(Booking.customer_id == customer_id).offset(skip).limit(limit).all()
+    return db.query(Booking).options(joinedload(Booking.resource)).filter(Booking.customer_id == customer_id).offset(skip).limit(limit).all()
 
 def get_bookings_by_owner(db: Session, owner_id: UUID, skip: int = 0, limit: int = 100) -> List[Booking]:
     """Bir işletme sahibine ait tüm rezervasyonları listeler."""
-    return db.query(Booking).filter(Booking.owner_id == owner_id).offset(skip).limit(limit).all()
+    return db.query(Booking).options(joinedload(Booking.resource)).filter(Booking.owner_id == owner_id).offset(skip).limit(limit).all()
 
 def create_booking(db: Session, booking_in: BookingCreate, customer_id: UUID, owner_id: UUID, total_price: Decimal) -> Booking:
     """
@@ -55,7 +55,7 @@ def create_booking(db: Session, booking_in: BookingCreate, customer_id: UUID, ow
 def update_booking_status(db: Session, booking: Booking, status_update: BookingStatusUpdate) -> Booking:
     """Bir rezervasyonun durumunu günceller."""
     booking.status = status_update.status
-    booking.updated_at = datetime.now()
+    booking.updated_at = datetime.now(timezone.utc)
     db.add(booking)
     db.commit()
     db.refresh(booking)
@@ -64,7 +64,7 @@ def update_booking_status(db: Session, booking: Booking, status_update: BookingS
 def update_booking_payment_status(db: Session, booking: Booking, payment_status_update: BookingPaymentStatusUpdate) -> Booking:
     """Bir rezervasyonun ödeme durumunu günceller."""
     booking.payment_status = payment_status_update.payment_status
-    booking.updated_at = datetime.now()
+    booking.updated_at = datetime.now(timezone.utc)
     db.add(booking)
     db.commit()
     db.refresh(booking)

@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Path as FastAPIPa
 from sqlalchemy.orm import Session
 from typing import List
 from uuid import UUID
-from datetime import datetime, time, timedelta
+from datetime import datetime, time, timedelta, timezone
 
 # Proje içi importlar
 from database import get_db
@@ -29,6 +29,11 @@ async def calculate_price(
     db: Session = Depends(get_db)
 ):
     """Verilen kaynak ve zaman aralığı için tahmini rezervasyon ücretini hesaplar."""
+    if data.start_time.tzinfo is None:
+        data.start_time = data.start_time.replace(tzinfo=timezone.utc)
+    if data.end_time.tzinfo is None:
+        data.end_time = data.end_time.replace(tzinfo=timezone.utc)
+        
     if data.end_time <= data.start_time:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Bitiş zamanı başlangıç zamanından sonra olmalıdır.")
 
@@ -60,6 +65,12 @@ async def create_booking(
     db_resource = crud_resource.get_resource_by_id(db, booking_in.resource_id)
     if not db_resource:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Kaynak bulunamadı.")
+
+    # TIMEZONE HANDLING: Ensure datetimes are offset-aware
+    if booking_in.start_time.tzinfo is None:
+        booking_in.start_time = booking_in.start_time.replace(tzinfo=timezone.utc)
+    if booking_in.end_time.tzinfo is None:
+        booking_in.end_time = booking_in.end_time.replace(tzinfo=timezone.utc)
 
     if booking_in.end_time <= booking_in.start_time:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Bitiş zamanı başlangıç zamanından sonra olmalıdır.")

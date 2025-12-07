@@ -1,7 +1,7 @@
 # backend/schemas/booking.py
 from pydantic import BaseModel, Field, field_validator, model_validator
 from uuid import UUID
-from datetime import datetime, time, date, timedelta
+from datetime import datetime, time, date, timedelta, timezone
 from typing import Optional, List
 from decimal import Decimal # Total price ve deposit amount için
 
@@ -21,8 +21,17 @@ class BookingCreate(BaseModel):
     @classmethod
     def validate_start_time(cls, v: datetime) -> datetime:
         """Başlangıç zamanı gelecekte olmalı"""
-        if v < datetime.now():
-            raise ValueError('Rezervasyon başlangıç zamanı geçmişte olamaz')
+        # Ensure v is aware
+        if v.tzinfo is None:
+            v = v.replace(tzinfo=timezone.utc)
+        
+        if v < datetime.now(timezone.utc):
+            # For testing/dev purposes, allow slight past times (e.g. 1 min grace)
+            # or simply fail. For now, we fail but use aware comparison.
+            # But local clock might be slightly off or network latency.
+            # Let's just fix the crash first.
+            if v < datetime.now(timezone.utc) - timedelta(minutes=1):
+                raise ValueError('Rezervasyon başlangıç zamanı geçmişte olamaz')
         return v
 
     @model_validator(mode='after')
@@ -55,10 +64,19 @@ class BookingCalculatePriceRequest(BaseModel):
 class BookingCalculatePriceResponse(BaseModel):
     total_price: Decimal
 
+class BookingResourceOut(BaseModel):
+    name: str
+    resource_id: UUID
+    images: Optional[List[str]] = None
+
+    class Config:
+        from_attributes = True
+
 # Booking çıktısı (API yanıtı) şeması
 class BookingOut(BaseModel):
     booking_id: UUID
     resource_id: UUID
+    resource: Optional[BookingResourceOut] = None # Include resource details
     customer_id: UUID
     owner_id: UUID
     start_time: datetime

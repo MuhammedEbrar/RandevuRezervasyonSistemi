@@ -140,11 +140,10 @@ function ResourceListPage() {
                         {resource.type}
                       </span>
                       <span
-                        className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                          resource.is_active
+                        className={`px-2 py-1 text-xs font-semibold rounded-full ${resource.is_active
                             ? 'bg-green-100 text-green-800'
                             : 'bg-red-100 text-red-800'
-                        }`}
+                          }`}
                       >
                         {resource.is_active ? 'Aktif' : 'Pasif'}
                       </span>
@@ -173,6 +172,12 @@ function ResourceListPage() {
                           className="text-sm bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-3 rounded text-center"
                         >
                           Takvimi Yönet
+                        </Link>
+                        <Link
+                          to={`/dashboard/resources/pricing/${resource.resource_id}`}
+                          className="text-sm bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-3 rounded text-center"
+                        >
+                          Fiyat Yönetimi
                         </Link>
                       </>
                     ) : (
