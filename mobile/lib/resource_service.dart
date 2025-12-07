@@ -20,7 +20,7 @@ class ResourceService {
 
   Future<List<dynamic>> getMyResources() async {
     final token = await _getToken();
-    if (token == null) return [];
+    if (token == null) throw Exception("Oturum açılmamış.");
 
     final url = Uri.parse('$_baseUrl/resources/');
     try {
@@ -35,13 +35,12 @@ class ResourceService {
       if (response.statusCode == 200) {
         return List<dynamic>.from(json.decode(response.body));
       } else {
-        print(
-            'Kaynaklar alınırken hata: ${response.statusCode} - ${response.body}');
-        return [];
+        // Hata detayını fırlat ki UI'da gözüksün
+        final errorBody = utf8.decode(response.bodyBytes);
+        throw Exception('${response.statusCode}: $errorBody');
       }
     } catch (e) {
-      print('API Hatası (getMyResources): $e');
-      return [];
+      throw Exception('Bir hata oluştu: $e');
     }
   }
 
@@ -302,7 +301,7 @@ class ResourceService {
           return errorData['detail'] ??
               "Bir hata oluştu: ${response.statusCode}";
         } catch (_) {
-          return "Bir hata oluştu: ${response.statusCode}";
+          return "JSON Hatası: ${response.statusCode} - ${response.body}";
         }
       }
     } catch (e) {
