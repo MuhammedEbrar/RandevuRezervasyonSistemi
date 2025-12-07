@@ -47,6 +47,23 @@ def create_pricing_rule(
         owner_id=owner_id, 
         resource_id=resource_id # CRUD fonksiyonunuzun bunu kabul ettiğinden emin olun
     )
+
+    # OTOMATİK AKTİVASYON KONTROLÜ
+    from crud import resource as crud_resource_import
+    from schemas.resource import ResourceUpdate
+    
+    # Kaynağı ve ilişkilerini getir
+    resource = crud_resource_import.get_resource_by_id(db, resource_id)
+    if resource and not resource.is_active:
+        # Eğer en az bir müsaitlik kuralı varsa ve şimdi fiyat da eklendiyse -> AKTİF ET
+        # Not: resource.availability_schedules lazy load olabilir, count kontrolü yapıyoruz.
+        if len(resource.availability_schedules) > 0:
+            crud_resource_import.update_resource(
+                db, 
+                db_resource=resource, 
+                resource_update=ResourceUpdate(is_active=True)
+            )
+
     return new_rule
 
 # --- Belirli Bir Fiyatlandırma Kuralını ID'ye Göre Getirme ---

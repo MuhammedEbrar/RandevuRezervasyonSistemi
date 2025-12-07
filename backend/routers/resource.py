@@ -89,6 +89,28 @@ def update_resource(
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Bu kaynağı güncelleme yetkiniz yok.")
 
     updated_resource = crud_resource.update_resource(db, db_resource=db_resource, resource_update=resource_update)
+    
+    # AKTİVASYON KONTROLÜ: Eğer kaynak aktif edilmeye çalışılıyorsa kuralları kontrol et
+    if resource_update.is_active is True:
+        # İlişkileri açıkça sayalım veya yükleyelim
+        # .count() kullanmak daha performanslı olabilir ama burada basitçe listeyi reload edebiliriz
+        db.refresh(updated_resource) # Nesneyi yenile
+        
+        # İlişkilere erişerek yüklenmesini sağlayalım
+        pricing_count = len(updated_resource.pricing_rules)
+        availability_count = len(updated_resource.availability_schedules)
+
+        if pricing_count == 0 or availability_count == 0:
+            # Geri al (Rollback benzeri işlem veya tekrar pasife çek)
+            # Burada tekrar pasife çekmek en kolayı veritabanı açısından
+            revert_update = ResourceUpdate(is_active=False)
+            crud_resource.update_resource(db, db_resource=updated_resource, resource_update=revert_update)
+            
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, 
+                detail="Kaynağı aktif etmeden önce en az bir fiyatlandırma kuralı ve bir müsaitlik takvimi eklemelisiniz."
+            )
+
     return updated_resource
 
 # --- Kaynak Silme ---

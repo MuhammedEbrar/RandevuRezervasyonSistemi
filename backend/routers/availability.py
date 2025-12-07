@@ -44,9 +44,28 @@ async def create_availability_schedule(
     if schedule_in.start_time >= schedule_in.end_time:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Başlangıç saati bitiş saatinden önce olmalıdır.")
     
-    return crud_availability.create_availability_schedule(
+    new_schedule = crud_availability.create_availability_schedule(
         db=db, schedule_in=schedule_in, resource_id=resource_id, owner_id=current_user.user_id
     )
+
+    # OTOMATİK AKTİVASYON KONTROLÜ
+    from schemas.resource import ResourceUpdate
+    
+    # Kaynağı ve ilişkilerini getir (check_resource_ownership zaten kaynağı çekmişti ama db oturumunda taze veri için tekrar bakabiliriz veya db_resource kullanabiliriz)
+    # create_availability_schedule sonrası ilişki count'u henüz güncellenmemiş olabilir (commit sırasına bağlı), 
+    # ancak lazy loading ile yeni listeyi alabiliriz.
+    
+    resource = crud_resource.get_resource_by_id(db, resource_id)
+    if resource and not resource.is_active:
+        # Eğer en az bir fiyat kuralı varsa ve şimdi müsaitlik de eklendiyse -> AKTİF ET
+        if len(resource.pricing_rules) > 0:
+            crud_resource.update_resource(
+                db, 
+                db_resource=resource, 
+                resource_update=ResourceUpdate(is_active=True)
+            )
+            
+    return new_schedule
 
 @router.get("/", response_model=List[AvailabilityScheduleOut])
 async def get_resource_availability_schedules(

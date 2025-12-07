@@ -14,7 +14,7 @@ function ResourceEditPage() {
       try {
         // fetch yerine api servisindeki fonksiyonu kullan
         const data = await getResourceById(resourceId);
-        
+
         setFormData({
           name: data.name || '',
           description: data.description || '',
@@ -26,7 +26,9 @@ function ResourceEditPage() {
           zip_code: data.location?.zip_code || '',
           tags: (data.tags || []).join(', '),
           images: (data.images || []).join(', '),
+          images: (data.images || []).join(', '),
           cancellation_policy: data.cancellation_policy || '',
+          is_active: data.is_active || false,
         });
       } catch (error) {
         alert('Veri alınamadı: ' + error.message);
@@ -45,16 +47,17 @@ function ResourceEditPage() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
+
     const resourceToUpdate = {
-        name: formData.name, description: formData.description, type: formData.type,
-        capacity: formData.type === 'MEKAN' ? parseInt(formData.capacity) : null,
-        location: { address: formData.address, city: formData.city, country: formData.country, zip_code: formData.zip_code },
-        tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
-        images: formData.images.split(',').map(i => i.trim()).filter(Boolean),
-        cancellation_policy: formData.cancellation_policy,
+      name: formData.name, description: formData.description, type: formData.type,
+      capacity: formData.type === 'MEKAN' ? parseInt(formData.capacity) : null,
+      location: { address: formData.address, city: formData.city, country: formData.country, zip_code: formData.zip_code },
+      tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
+      images: formData.images.split(',').map(i => i.trim()).filter(Boolean),
+      cancellation_policy: formData.cancellation_policy,
+      is_active: formData.is_active,
     };
-    
+
     try {
       // fetch yerine api servisindeki fonksiyonu kullan
       await updateResource(resourceId, resourceToUpdate);
@@ -92,18 +95,18 @@ function ResourceEditPage() {
             <input type="number" name="capacity" value={formData.capacity} onChange={handleChange} className="w-full p-2 border rounded" min="1" />
           </div>
         )}
-        <hr/>
+        <hr />
         <p className="font-bold text-gray-700">Konum Bilgileri</p>
         <div>
-            <label className="block text-gray-700 mb-1" htmlFor="address">Adres</label>
-            <input name="address" value={formData.address} onChange={handleChange} className="w-full p-2 border rounded" />
+          <label className="block text-gray-700 mb-1" htmlFor="address">Adres</label>
+          <input name="address" value={formData.address} onChange={handleChange} className="w-full p-2 border rounded" />
         </div>
         <div className="grid grid-cols-3 gap-4">
-            <div><label className="block text-gray-700 mb-1" htmlFor="city">Şehir</label><input name="city" value={formData.city} onChange={handleChange} className="w-full p-2 border rounded" /></div>
-            <div><label className="block text-gray-700 mb-1" htmlFor="country">Ülke</label><input name="country" value={formData.country} onChange={handleChange} className="w-full p-2 border rounded" /></div>
-            <div><label className="block text-gray-700 mb-1" htmlFor="zip_code">Posta Kodu</label><input name="zip_code" value={formData.zip_code} onChange={handleChange} className="w-full p-2 border rounded" /></div>
+          <div><label className="block text-gray-700 mb-1" htmlFor="city">Şehir</label><input name="city" value={formData.city} onChange={handleChange} className="w-full p-2 border rounded" /></div>
+          <div><label className="block text-gray-700 mb-1" htmlFor="country">Ülke</label><input name="country" value={formData.country} onChange={handleChange} className="w-full p-2 border rounded" /></div>
+          <div><label className="block text-gray-700 mb-1" htmlFor="zip_code">Posta Kodu</label><input name="zip_code" value={formData.zip_code} onChange={handleChange} className="w-full p-2 border rounded" /></div>
         </div>
-        <hr/>
+        <hr />
         <div>
           <label className="block text-gray-700 font-bold mb-2" htmlFor="tags">Etiketler (Virgülle ayırın)</label>
           <input name="tags" value={formData.tags} onChange={handleChange} className="w-full p-2 border rounded" />
@@ -115,6 +118,18 @@ function ResourceEditPage() {
         <div>
           <label className="block text-gray-700 font-bold mb-2" htmlFor="cancellation_policy">İptal Politikası</label>
           <textarea name="cancellation_policy" value={formData.cancellation_policy} onChange={handleChange} className="w-full p-2 border rounded" />
+        </div>
+        <div>
+          <label className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              name="is_active"
+              checked={formData.is_active}
+              onChange={(e) => setFormData(prev => ({ ...prev, is_active: e.target.checked }))}
+              className="h-5 w-5 text-blue-600"
+            />
+            <span className="font-bold text-gray-700">Aktif (Yayında)</span>
+          </label>
         </div>
         <div className="flex justify-end pt-4">
           <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Değişiklikleri Kaydet</button>

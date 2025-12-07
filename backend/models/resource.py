@@ -26,7 +26,7 @@ class Resource(Base):
     type = Column(Enum(ResourceType), nullable=False)
     capacity = Column(Integer, nullable=True)
     location = Column(JSONB, nullable=True)
-    is_active = Column(Boolean, default=True)
+    is_active = Column(Boolean, default=False)
     tags = Column(ARRAY(Text), nullable=True)
     images = Column(ARRAY(Text), nullable=True)
     cancellation_policy = Column(String, nullable=True)
