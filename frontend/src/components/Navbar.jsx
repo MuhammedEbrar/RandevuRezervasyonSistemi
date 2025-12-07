@@ -65,12 +65,22 @@ function Navbar() {
                 >
                   Profilim
                 </Link> */}
-                <Link
-                  to="/my-bookings"
-                  className="hover:text-blue-200 transition-colors"
-                >
-                  Rezervasyonlarım
-                </Link>
+                {/* ROL KONTROLÜ: İşletme Sahibi ise 'Gelen Talepler', Müşteri ise 'Rezervasyonlarım' */}
+                {userInfo.role === 'BUSINESS_OWNER' ? (
+                  <Link
+                    to="/dashboard/bookings"
+                    className="hover:text-blue-200 transition-colors bg-blue-700 px-3 py-1 rounded"
+                  >
+                    Gelen Talepler
+                  </Link>
+                ) : (
+                  <Link
+                    to="/my-bookings"
+                    className="hover:text-blue-200 transition-colors"
+                  >
+                    Rezervasyonlarım
+                  </Link>
+                )}
                 <button
                   onClick={handleLogout}
                   className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition-colors font-semibold"
@@ -112,13 +122,23 @@ function Navbar() {
                 >
                   Profilim
                 </Link> */}
-                <Link
-                  to="/my-bookings"
-                  className="hover:bg-blue-700 px-4 py-2 rounded transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Rezervasyonlarım
-                </Link>
+                {userInfo.role === 'BUSINESS_OWNER' ? (
+                  <Link
+                    to="/dashboard/bookings"
+                    className="hover:bg-blue-700 px-4 py-2 rounded transition-colors bg-blue-800"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Gelen Talepler
+                  </Link>
+                ) : (
+                  <Link
+                    to="/my-bookings"
+                    className="hover:bg-blue-700 px-4 py-2 rounded transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Rezervasyonlarım
+                  </Link>
+                )}
                 <button
                   onClick={() => {
                     handleLogout();
