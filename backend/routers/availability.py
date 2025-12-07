@@ -59,6 +59,19 @@ async def get_resource_availability_schedules(
     return crud_availability.get_availability_schedules_for_resource(
         db=db, resource_id=resource_id, owner_id=current_user.user_id
     )
+
+@router.delete("/{schedule_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_availability_schedule(
+    schedule_id: UUID = FastAPIPath(...),
+    resource_id: UUID = FastAPIPath(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Bir müsaitlik kuralını siler."""
+    check_resource_ownership(db, current_user, resource_id)
+    crud_availability.delete_availability_schedule(
+        db=db, schedule_id=schedule_id
+    )
     
 # --- MÜSAİT ZAMAN ARALIĞI HESAPLAMA (ANA FONKSİYON) ---
 

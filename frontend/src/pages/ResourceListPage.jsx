@@ -49,7 +49,7 @@ function ResourceListPage() {
   if (isLoading) {
     return (
       <>
-        {!isOwnerView && <Navbar />}
+        <Navbar />
         <div className="text-center p-20">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
           <p className="mt-4 text-gray-600">Yükleniyor...</p>
@@ -61,7 +61,7 @@ function ResourceListPage() {
   if (error) {
     return (
       <>
-        {!isOwnerView && <Navbar />}
+        <Navbar />
         <div className="text-center p-10 text-red-500">Hata: {error}</div>
       </>
     );
@@ -69,7 +69,7 @@ function ResourceListPage() {
 
   return (
     <>
-      {!isOwnerView && <Navbar />}
+      <Navbar />
       <div className="container mx-auto p-8">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">
@@ -141,8 +141,8 @@ function ResourceListPage() {
                       </span>
                       <span
                         className={`px-2 py-1 text-xs font-semibold rounded-full ${resource.is_active
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-red-100 text-red-800'
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-red-100 text-red-800'
                           }`}
                       >
                         {resource.is_active ? 'Aktif' : 'Pasif'}

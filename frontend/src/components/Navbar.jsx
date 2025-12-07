@@ -25,7 +25,11 @@ function Navbar() {
       <div className="container mx-auto px-4 py-3">
         <div className="flex justify-between items-center">
           {/* Logo / Ana Başlık */}
-          <Link to="/resources" className="text-2xl font-bold hover:text-blue-200 transition-colors">
+          {/* Logo / Ana Başlık */}
+          <Link
+            to={userInfo.role === 'BUSINESS_OWNER' ? "/dashboard/resources" : "/resources"}
+            className="text-2xl font-bold hover:text-blue-200 transition-colors"
+          >
             Randevu Sistemi
           </Link>
 
