@@ -34,7 +34,9 @@ app.add_middleware(
 async def read_root():
     return {"message": "Randevu ve Kiralama Platformu API'sine Hoş Geldiniz!"}
 
-# Router'lar buraya eklenecek (ileriki adımlarda)
-# from .routers import auth, users
-# app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
-# app.include_router(users.router, prefix="/api/v1/users", tags=["Users"])
+# Router'ları import ediyoruz
+from routers import auth, users
+
+# Router'ları uygulamaya ekliyoruz
+app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
+app.include_router(users.router, prefix="/api/v1/users", tags=["Users"])
