@@ -5,7 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  final String _baseUrl = 'http://13.60.31.19:8000/api/v1/auth';
+  final String _baseUrl = 'http://13.60.31.19/api/v1/auth';
   final _storage = const FlutterSecureStorage();
 
   Future<void> register({

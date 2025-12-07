@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 
 class ResourceService {
   // Backend base URL (Android emulator için 10.0.2.2)
-  final String _baseUrl = 'http://13.60.31.19:8000/api/v1';
+  final String _baseUrl = 'http://13.60.31.19/api/v1';
   final _storage = const FlutterSecureStorage();
 
   // Token'ı güvenli depolamadan alır

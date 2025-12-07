@@ -75,7 +75,7 @@ class MyApp extends StatelessWidget {
             ),
 
             // Kart Teması
-            cardTheme: CardTheme(
+            cardTheme: CardThemeData(
               color: Colors.white,
               elevation: 2,
               shadowColor: Colors.teal.withOpacity(0.1),
@@ -148,7 +148,7 @@ class MyApp extends StatelessWidget {
               elevation: 0,
               centerTitle: true,
             ),
-            cardTheme: CardTheme(
+            cardTheme: CardThemeData(
               color: const Color(0xFF1F2937),
               elevation: 4,
               shadowColor: Colors.black.withOpacity(0.3),
