@@ -120,9 +120,11 @@ async def get_available_slots_for_resource(
         potential_slots = {}
         slot_duration_minutes = 30
         
+        days_mapping = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
         current_date_iter = start_date
         while current_date_iter <= end_date:
-            day_of_week_enum = DayOfWeek(current_date_iter.strftime('%A').upper())
+            # Fix locale issue: use weekday() index instead of strftime('%A')
+            day_of_week_enum = DayOfWeek(days_mapping[current_date_iter.weekday()])
             daily_rules = [s for s in all_schedules if s.is_available and ((s.type == ScheduleType.REGULAR and s.day_of_week == day_of_week_enum) or (s.type == ScheduleType.EXCEPTION and s.specific_date == current_date_iter))]
             blocking_rules = [s for s in all_schedules if not s.is_available and s.type == ScheduleType.EXCEPTION and s.specific_date == current_date_iter]
             for rule in daily_rules:
@@ -147,9 +149,11 @@ async def get_available_slots_for_resource(
         return final_slots
     else: # DURATION_BASED
         available_blocks = []
+        days_mapping = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
         current_date_iter = start_date
         while current_date_iter <= end_date:
-            day_of_week_enum = DayOfWeek(current_date_iter.strftime('%A').upper())
+            # Fix locale issue: use weekday() index instead of strftime('%A')
+            day_of_week_enum = DayOfWeek(days_mapping[current_date_iter.weekday()])
             daily_rules = [s for s in all_schedules if s.is_available and ((s.type == ScheduleType.REGULAR and s.day_of_week == day_of_week_enum) or (s.type == ScheduleType.EXCEPTION and s.specific_date == current_date_iter))]
             for rule in daily_rules:
                 start_dt = datetime.combine(current_date_iter, rule.start_time).replace(tzinfo=timezone.utc)
