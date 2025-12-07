@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 application
-INJECTED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\main\AndroidManifest.xml:2:5-33:19
+INJECTED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\main\AndroidManifest.xml:3:5-35:19
 INJECTED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\debug\AndroidManifest.xml
 MERGED from [androidx.window:window:1.2.0] C:\Users\ASUS\.gradle\caches\8.9\transforms\ced24ed5739183a9adf8b70bcf7e8330\transformed\jetified-window-1.2.0\AndroidManifest.xml:22:5-29:19
 MERGED from [androidx.window:window:1.2.0] C:\Users\ASUS\.gradle\caches\8.9\transforms\ced24ed5739183a9adf8b70bcf7e8330\transformed\jetified-window-1.2.0\AndroidManifest.xml:22:5-29:19
@@ -21,8 +21,8 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\AS
 	android:name
 		INJECTED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\main\AndroidManifest.xml
 manifest
-ADDED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\main\AndroidManifest.xml:1:1-45:12
-MERGED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\main\AndroidManifest.xml:1:1-45:12
+ADDED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\main\AndroidManifest.xml:1:1-47:12
+MERGED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\main\AndroidManifest.xml:1:1-47:12
 INJECTED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\debug\AndroidManifest.xml:1:1-7:12
 INJECTED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\debug\AndroidManifest.xml:1:1-7:12
 INJECTED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\debug\AndroidManifest.xml:1:1-7:12
@@ -63,22 +63,24 @@ MERGED from [com.getkeepsafe.relinker:relinker:1.4.5] C:\Users\ASUS\.gradle\cach
 		INJECTED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\debug\AndroidManifest.xml
 	xmlns:android
 		ADDED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\main\AndroidManifest.xml:1:11-69
-queries
-ADDED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\main\AndroidManifest.xml:39:5-44:15
-intent#action:name:android.intent.action.PROCESS_TEXT+data:mimeType:text/plain
-ADDED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\main\AndroidManifest.xml:40:9-43:18
-action#android.intent.action.PROCESS_TEXT
-ADDED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\main\AndroidManifest.xml:41:13-72
-	android:name
-		ADDED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\main\AndroidManifest.xml:41:21-70
-data
-ADDED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\main\AndroidManifest.xml:42:13-50
-	android:mimeType
-		ADDED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\main\AndroidManifest.xml:42:19-48
 uses-permission#android.permission.INTERNET
-ADDED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\debug\AndroidManifest.xml:6:5-66
+ADDED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\main\AndroidManifest.xml:2:5-66
+MERGED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\main\AndroidManifest.xml:2:5-66
+MERGED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\main\AndroidManifest.xml:2:5-66
 	android:name
-		ADDED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\debug\AndroidManifest.xml:6:22-64
+		ADDED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\main\AndroidManifest.xml:2:22-64
+queries
+ADDED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\main\AndroidManifest.xml:41:5-46:15
+intent#action:name:android.intent.action.PROCESS_TEXT+data:mimeType:text/plain
+ADDED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\main\AndroidManifest.xml:42:9-45:18
+action#android.intent.action.PROCESS_TEXT
+ADDED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\main\AndroidManifest.xml:43:13-72
+	android:name
+		ADDED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\main\AndroidManifest.xml:43:21-70
+data
+ADDED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\main\AndroidManifest.xml:44:13-50
+	android:mimeType
+		ADDED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\main\AndroidManifest.xml:44:19-48
 uses-sdk
 INJECTED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\debug\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\STAJ2_ORIGINAL_PROJECTS\RandevuRezervasyonSistemi\mobile\android\app\src\debug\AndroidManifest.xml

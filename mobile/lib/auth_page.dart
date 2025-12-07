@@ -4,11 +4,18 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mobile/auth_service.dart';
 
+import 'package:mobile/home_page.dart';
 import 'package:mobile/main.dart'; // Tema değiştirici için dahil ettik
 
 class AuthPage extends StatefulWidget {
   final bool initialLoginView;
-  const AuthPage({super.key, this.initialLoginView = true});
+  final bool initialIsBusiness; // Yeni parametre
+
+  const AuthPage({
+    super.key,
+    this.initialLoginView = true,
+    this.initialIsBusiness = false,
+  });
 
   @override
   State<AuthPage> createState() => _AuthPageState();
@@ -16,13 +23,14 @@ class AuthPage extends StatefulWidget {
 
 class _AuthPageState extends State<AuthPage> {
   late bool _isLoginView;
-  bool _isBusinessRole = false;
+  late bool _isBusinessRole;
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
     _isLoginView = widget.initialLoginView;
+    _isBusinessRole = widget.initialIsBusiness;
   }
 
   final _loginFormKey = GlobalKey<FormState>();
@@ -49,7 +57,9 @@ class _AuthPageState extends State<AuthPage> {
         bool success = await _authService.login(
             _loginEmailController.text, _loginPasswordController.text);
         if (success && mounted) {
-          Navigator.pop(context, true);
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const HomePage()),
+          );
         } else if (mounted) {
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text('Giriş başarısız.')));

@@ -1,5 +1,5 @@
 // lib/home_page.dart
-// MODERN DASHBOARD TASARIMI ve ANIMASYONLU LOGIN SHEET (TEAL TEMA)
+// MODERN DASHBOARD TASARIMI ve ROL BAZLI GİRİŞ (TEAL TEMA)
 
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -35,12 +35,14 @@ class _HomePageState extends State<HomePage> {
 
   void _logout() async {
     await _storage.delete(key: 'auth_token');
-    setState(() {
-      _isLoggedIn = false;
-    });
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Başarıyla çıkış yapıldı.')),
+      );
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+            builder: (context) => const AuthPage(initialLoginView: true)),
+        (route) => false,
       );
     }
   }
@@ -70,7 +72,7 @@ class _HomePageState extends State<HomePage> {
             _buildHeader(theme, isDarkMode),
 
             // -----------------------------------------------------------------
-            // 2. DASHBOARD GRID (Menü Kartları)
+            // 2. DASHBOARD GRID (Menü Kartları) veya ROL SEÇİMİ
             // -----------------------------------------------------------------
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
@@ -86,68 +88,64 @@ class _HomePageState extends State<HomePage> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Grid Yapısı
-                  GridView.count(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 1.1,
-                    children: [
-                      _buildMenuCard(
-                        title: 'Hizmetleri\nKeşfet',
-                        icon: Icons.search_rounded,
-                        color: Colors.deepOrangeAccent,
-                        onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const ExplorePage())),
-                      ),
-                      _buildMenuCard(
-                        title: 'Rezervasyonlarım',
-                        icon: Icons.calendar_month_rounded,
-                        color: Colors.blueAccent,
-                        onTap: () {
-                          if (_isLoggedIn) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const MyBookingsPage()));
-                          } else {
-                            _showLoginSheet();
-                          }
-                        },
-                      ),
-                      _buildMenuCard(
-                        title: 'İşletme\nYönetimi',
-                        icon: Icons.store_mall_directory_rounded,
-                        color: Colors.teal,
-                        onTap: () {
-                          if (_isLoggedIn) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ResourceListPage()));
-                          } else {
-                            _showLoginSheet();
-                          }
-                        },
-                      ),
-                      _buildMenuCard(
-                        title: 'Profil\nAyarları',
-                        icon: Icons.person_rounded,
-                        color: Colors.purpleAccent,
-                        onTap: () {
-                          _showLoginSheet(
-                              message:
-                                  "Profil özellikleri yakında eklenecek. Lütfen giriş yapın.");
-                        },
-                      ),
-                    ],
-                  ),
+                  // İçerik Alanı
+                  _isLoggedIn
+                      ? GridView.count(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                          childAspectRatio: 1.1,
+                          children: [
+                            _buildMenuCard(
+                              title: 'Hizmetleri\nKeşfet',
+                              icon: Icons.search_rounded,
+                              color: Colors.deepOrangeAccent,
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ExplorePage())),
+                            ),
+                            _buildMenuCard(
+                              title: 'Rezervasyonlarım',
+                              icon: Icons.calendar_month_rounded,
+                              color: Colors.blueAccent,
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const MyBookingsPage()));
+                              },
+                            ),
+                            _buildMenuCard(
+                              title: 'İşletme\nYönetimi',
+                              icon: Icons.store_mall_directory_rounded,
+                              color: Colors.teal,
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ResourceListPage()));
+                              },
+                            ),
+                            _buildMenuCard(
+                              title: 'Profil\nAyarları',
+                              icon: Icons.person_rounded,
+                              color: Colors.purpleAccent,
+                              onTap: () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            "Profil özellikleri yakında eklenecek.")));
+                              },
+                            ),
+                          ],
+                        )
+                      : _buildRoleSelectionCards(),
                 ],
               ),
             ),
@@ -158,94 +156,87 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildAuthButtons() {
-    if (_isLoggedIn) {
-      return Center(
-        child: Container(
-          margin: const EdgeInsets.only(top: 10),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.25),
-            borderRadius: BorderRadius.circular(30),
-            border:
-                Border.all(color: Colors.white.withOpacity(0.6), width: 1.5),
-          ),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(30),
-            onTap: _logout,
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.logout_rounded, color: Colors.white, size: 20),
-                  SizedBox(width: 8),
-                  Text('Çıkış Yap',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14)),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
     return Center(
       child: Container(
         margin: const EdgeInsets.only(top: 10),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextButton(
-              onPressed: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          const AuthPage(initialLoginView: true)),
-                );
-                _checkLoginStatus();
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  side: BorderSide(
-                      color: Colors.white.withOpacity(0.7), width: 1.5),
-                ),
-              ),
-              child: const Text('Giriş Yap',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-            ),
-            const SizedBox(width: 12),
-            ElevatedButton(
-              onPressed: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          const AuthPage(initialLoginView: false)),
-                );
-                _checkLoginStatus();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.teal,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                elevation: 3,
-              ),
-              child: const Text('Kayıt Ol',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-            ),
-          ],
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.25),
+          borderRadius: BorderRadius.circular(30),
+          border: Border.all(color: Colors.white.withOpacity(0.6), width: 1.5),
         ),
+        child: _isLoggedIn
+            ? InkWell(
+                borderRadius: BorderRadius.circular(30),
+                onTap: _logout,
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.logout_rounded, color: Colors.white, size: 20),
+                      SizedBox(width: 8),
+                      Text('Çıkış Yap',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14)),
+                    ],
+                  ),
+                ),
+              )
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  InkWell(
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        bottomLeft: Radius.circular(30)),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const AuthPage(initialLoginView: true)),
+                      ).then((_) => _checkLoginStatus());
+                    },
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      child: Text('Giriş Yap',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14)),
+                    ),
+                  ),
+                  Container(
+                      width: 1,
+                      height: 20,
+                      color: Colors.white.withOpacity(0.5)),
+                  InkWell(
+                    borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(30),
+                        bottomRight: Radius.circular(30)),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const AuthPage(initialLoginView: false)),
+                      ).then((_) => _checkLoginStatus());
+                    },
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      child: Text('Kayıt Ol',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14)),
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
   }
@@ -257,14 +248,8 @@ class _HomePageState extends State<HomePage> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: isDarkMode
-              ? [
-                  const Color(0xFF004D40),
-                  const Color(0xFF111827)
-                ] // Dark Teal -> Dark Gray
-              : [
-                  const Color(0xFF009688),
-                  const Color(0xFF4DB6AC)
-                ], // Teal -> Light Teal
+              ? [const Color(0xFF004D40), const Color(0xFF111827)]
+              : [const Color(0xFF009688), const Color(0xFF4DB6AC)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -302,11 +287,13 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Hizmetleri Keşfedin\nve Randevu Alın',
-            style: TextStyle(
+          Text(
+            _isLoggedIn
+                ? 'Panelinizi Yönetin\nve İşlemleri Takip Edin'
+                : 'Devam etmek için\nLütfen bir rol seçin',
+            style: const TextStyle(
               color: Colors.white,
-              fontSize: 28,
+              fontSize: 26,
               fontWeight: FontWeight.bold,
               height: 1.2,
             ),
@@ -362,96 +349,99 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // --- MODERN LOGIN SHEET (Bottom Sheet) ---
-  void _showLoginSheet({String? message}) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Container(
+  Widget _buildRoleSelectionCards() {
+    return Column(
+      children: [
+        _buildRoleCard(
+          title: 'MÜŞTERİ',
+          description: 'Hizmetleri keşfet ve randevu al.',
+          icon: Icons.person_outline_rounded,
+          color: Colors.blue,
+          isBusiness: false,
+        ),
+        const SizedBox(height: 16),
+        _buildRoleCard(
+          title: 'İŞ YERİ',
+          description: 'İşletmeni yönet ve randevuları takip et.',
+          icon: Icons.store_outlined,
+          color: Colors.orange,
+          isBusiness: true,
+        ),
+        const SizedBox(height: 24),
+        TextButton(
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const ExplorePage()));
+          },
+          child: const Text('Giriş yapmadan keşfet >>',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRoleCard({
+    required String title,
+    required String description,
+    required IconData icon,
+    required Color color,
+    required bool isBusiness,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AuthPage(
+              initialLoginView: false,
+              initialIsBusiness: isBusiness,
+            ),
+          ),
+        ).then((_) => _checkLoginStatus());
+      },
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                blurRadius: 20,
-                offset: const Offset(0, -5)),
-          ],
-        ),
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
-            const SizedBox(height: 24),
+          ],
+          border: Border.all(color: color.withOpacity(0.3), width: 1),
+        ),
+        child: Row(
+          children: [
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withOpacity(0.1),
+                color: color.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.lock_rounded,
-                  size: 48, color: Theme.of(context).primaryColor),
+              child: Icon(icon, color: color, size: 32),
             ),
-            const SizedBox(height: 24),
-            Text(
-              'Giriş Yapmanız Gerekiyor',
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineSmall
-                  ?.copyWith(fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              message ??
-                  'Bu özelliğe erişmek ve devam etmek için lütfen oturum açın veya kayıt olun.',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(color: Colors.grey),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 32),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const AuthPage(initialLoginView: true)))
-                      .then((_) => _checkLoginStatus());
-                },
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  elevation: 0,
-                ),
-                child: const Text('Giriş Yap / Kayıt Ol'),
+            const SizedBox(width: 20),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title,
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: color)),
+                  const SizedBox(height: 4),
+                  Text(description,
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                ],
               ),
             ),
-            const SizedBox(height: 12),
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Şimdilik Vazgeç',
-                  style: TextStyle(
-                      color: Colors.grey, fontWeight: FontWeight.w600)),
-            ),
-            const SizedBox(height: 16),
+            Icon(Icons.arrow_forward_ios_rounded,
+                color: Colors.grey[400], size: 16),
           ],
         ),
       ),
