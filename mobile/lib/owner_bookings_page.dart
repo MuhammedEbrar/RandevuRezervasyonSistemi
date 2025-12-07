@@ -1,7 +1,7 @@
 // lib/owner_bookings_page.dart
 
 import 'package:flutter/material.dart';
-import 'package:mobile/auth_service.dart';
+import 'package:mobile/resource_service.dart';
 
 class OwnerBookingsPage extends StatefulWidget {
   const OwnerBookingsPage({super.key});
@@ -34,7 +34,9 @@ class _OwnerBookingsPageState extends State<OwnerBookingsPage> {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return Center(child: Text('Rezervasyonlar yüklenirken bir hata oluştu: ${snapshot.error}'));
+            return Center(
+                child: Text(
+                    'Rezervasyonlar yüklenirken bir hata oluştu: ${snapshot.error}'));
           }
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text('Hiç rezervasyon bulunmuyor.'));
@@ -49,8 +51,10 @@ class _OwnerBookingsPageState extends State<OwnerBookingsPage> {
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: ListTile(
                   leading: const Icon(Icons.receipt_long, color: Colors.orange),
-                  title: Text(booking['resource_name'] ?? 'Bilinmeyen Hizmet', style: const TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: Text('Müşteri ID: ${booking['customer_id']}\nTarih: ${booking['start_time']}'),
+                  title: Text(booking['resource_name'] ?? 'Bilinmeyen Hizmet',
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: Text(
+                      'Müşteri ID: ${booking['customer_id']}\nTarih: ${booking['start_time']}'),
                   trailing: Text('${booking['total_price']} TL'),
                 ),
               );

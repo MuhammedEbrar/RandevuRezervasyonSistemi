@@ -1,8 +1,8 @@
-// lib/my_bookings_page.dart (DÜZELTİLMİŞ VE İYİLEŞTİRİLMİŞ HALİ)
+// lib/my_bookings_page.dart
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Tarih formatlamak için
-import 'package:mobile/auth_service.dart';
+import 'package:mobile/resource_service.dart';
 
 class MyBookingsPage extends StatefulWidget {
   const MyBookingsPage({super.key});
@@ -61,7 +61,9 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return Center(child: Text('Rezervasyonlar yüklenirken bir hata oluştu: ${snapshot.error}'));
+            return Center(
+                child: Text(
+                    'Rezervasyonlar yüklenirken bir hata oluştu: ${snapshot.error}'));
           }
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text('Hiç rezervasyonunuz bulunmuyor.'));
@@ -74,17 +76,21 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
             itemBuilder: (context, index) {
               final booking = bookings[index];
               final status = booking['status'] as String?;
-              
+
               // Backend'den 'resource' objesi içinde 'name' gelebilir, bu daha güvenli bir yoldur.
-              final resourceName = booking['resource']?['name'] ?? 'Bilinmeyen Hizmet';
+              final resourceName =
+                  booking['resource']?['name'] ?? 'Bilinmeyen Hizmet';
 
               return Card(
                 elevation: 3,
                 margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
                 child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  leading: Icon(Icons.event_available, color: _getStatusColor(status), size: 40),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  leading: Icon(Icons.event_available,
+                      color: _getStatusColor(status), size: 40),
                   title: Text(
                     resourceName,
                     style: const TextStyle(fontWeight: FontWeight.bold),
@@ -94,7 +100,10 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                   ),
                   trailing: Text(
                     '${booking['total_price']} TL',
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.teal),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Colors.teal),
                   ),
                 ),
               );

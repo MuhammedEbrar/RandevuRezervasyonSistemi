@@ -34,7 +34,8 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
 
   void _fetchSlots(DateTime date) {
     setState(() {
-      _slotsFuture = _resourceService.getAvailableSlots(widget.resourceId, date);
+      _slotsFuture =
+          _resourceService.getAvailableSlots(widget.resourceId, date);
       _selectedSlot = null;
       _calculatedPrice = null;
     });
@@ -48,24 +49,41 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
     });
 
     try {
-      final startTime = "${_selectedDay!.toIso8601String().substring(0, 10)}T$slot:00";
-      final endTime = "${_selectedDay!.toIso8601String().substring(0, 10)}T${int.parse(slot.substring(0, 2)) + 1}:00:00";
-      final price = await _resourceService.calculatePrice(widget.resourceId, startTime, endTime);
-      setState(() { _calculatedPrice = price; });
+      final startTime =
+          "${_selectedDay!.toIso8601String().substring(0, 10)}T$slot:00";
+      // Basitçe bir saat ekliyoruz. Daha gelişmiş mantık gerekebilir.
+      final endTime =
+          "${_selectedDay!.toIso8601String().substring(0, 10)}T${(int.parse(slot.substring(0, 2)) + 1).toString().padLeft(2, '0')}:${slot.substring(3, 5)}:00";
+
+      final price = await _resourceService.calculatePrice(
+          widget.resourceId, startTime, endTime);
+      setState(() {
+        _calculatedPrice = price;
+      });
     } catch (e) {
       print(e);
-      setState(() { _calculatedPrice = 'Hesaplanamadı'; });
+      setState(() {
+        _calculatedPrice = 'Hesaplanamadı';
+      });
     } finally {
-      if(mounted) { setState(() { _isPriceLoading = false; }); }
+      if (mounted) {
+        setState(() {
+          _isPriceLoading = false;
+        });
+      }
     }
   }
 
   void _makeBooking() async {
     if (_selectedSlot == null || _calculatedPrice == null) return;
-    setState(() { _isBookingLoading = true; });
+    setState(() {
+      _isBookingLoading = true;
+    });
 
-    final startTime = "${_selectedDay!.toIso8601String().substring(0, 10)}T$_selectedSlot:00";
-    final endTime = "${_selectedDay!.toIso8601String().substring(0, 10)}T${int.parse(_selectedSlot!.substring(0, 2)) + 1}:00:00";
+    final startTime =
+        "${_selectedDay!.toIso8601String().substring(0, 10)}T$_selectedSlot:00";
+    final endTime =
+        "${_selectedDay!.toIso8601String().substring(0, 10)}T${(int.parse(_selectedSlot!.substring(0, 2)) + 1).toString().padLeft(2, '0')}:${_selectedSlot!.substring(3, 5)}:00";
 
     bool success = await _resourceService.createBooking(
       resourceId: widget.resourceId,
@@ -74,12 +92,18 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
       totalPrice: _calculatedPrice!,
     );
 
-    if(mounted) {
-      setState(() { _isBookingLoading = false; });
+    if (mounted) {
+      setState(() {
+        _isBookingLoading = false;
+      });
       if (success) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const BookingSuccessPage()));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const BookingSuccessPage()));
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Rezervasyon oluşturulamadı.')));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Rezervasyon oluşturulamadı.')));
       }
     }
   }
@@ -91,9 +115,12 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
       body: FutureBuilder<Map<String, dynamic>>(
         future: _resourceFuture,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
-          if (snapshot.hasError) return Center(child: Text('Hata: ${snapshot.error}'));
-          if (!snapshot.hasData || snapshot.data!.isEmpty) return const Center(child: Text('Varlık bulunamadı.'));
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return const Center(child: CircularProgressIndicator());
+          if (snapshot.hasError)
+            return Center(child: Text('Hata: ${snapshot.error}'));
+          if (!snapshot.hasData || snapshot.data!.isEmpty)
+            return const Center(child: Text('Varlık bulunamadı.'));
 
           final resource = snapshot.data!;
           return SingleChildScrollView(
@@ -101,9 +128,12 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(resource['name'] ?? 'İsimsiz Varlık', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                Text(resource['name'] ?? 'İsimsiz Varlık',
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
-                Text(resource['description'] ?? 'Açıklama mevcut değil.', style: TextStyle(fontSize: 16, color: Colors.grey[700])),
+                Text(resource['description'] ?? 'Açıklama mevcut değil.',
+                    style: TextStyle(fontSize: 16, color: Colors.grey[700])),
                 const Divider(height: 40, thickness: 1),
                 TableCalendar(
                   locale: 'tr_TR',
@@ -123,19 +153,34 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                 FutureBuilder<List<dynamic>>(
                   future: _slotsFuture,
                   builder: (context, slotSnapshot) {
-                    if (slotSnapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
-                    if (slotSnapshot.hasError) return const Center(child: Text('Saatler getirilemedi.'));
-                    if (!slotSnapshot.hasData || slotSnapshot.data!.isEmpty) return const Center(child: Text('Bu tarih için müsait saat bulunamadı.'));
+                    if (slotSnapshot.connectionState == ConnectionState.waiting)
+                      return const Center(child: CircularProgressIndicator());
+                    if (slotSnapshot.hasError)
+                      return const Center(child: Text('Saatler getirilemedi.'));
+                    if (!slotSnapshot.hasData || slotSnapshot.data!.isEmpty)
+                      return const Center(
+                          child: Text('Bu tarih için müsait saat bulunamadı.'));
                     final slots = slotSnapshot.data!;
                     return Wrap(
                       spacing: 8.0,
                       runSpacing: 4.0,
-                      children: slots.map<Widget>((slot) {
-                        final String currentSlot = slot.toString();
+                      children: slots.map<Widget>((slotData) {
+                        // Backend slotData olarak {"start_time": "2025-07-17T14:00:00", ...} dönüyor
+                        // Biz sadece UI için saati alacağız.
+                        String startTimeIso = slotData['start_time'];
+                        DateTime dt = DateTime.parse(startTimeIso);
+                        // Yerel saate çevirmek gerekebilir ancak backend UTC/Local yönetimi karışık olabilir.
+                        // Şimdilik sadece saat kısmını alalım.
+                        String currentSlot =
+                            "${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}";
+
                         return ChoiceChip(
                           label: Text(currentSlot),
                           selectedColor: Colors.teal,
-                          labelStyle: TextStyle(color: _selectedSlot == currentSlot ? Colors.white : Colors.black),
+                          labelStyle: TextStyle(
+                              color: _selectedSlot == currentSlot
+                                  ? Colors.white
+                                  : Colors.black),
                           selected: _selectedSlot == currentSlot,
                           onSelected: (isSelected) {
                             if (isSelected) _onSlotSelected(currentSlot);
@@ -154,20 +199,30 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                       children: [
                         Container(
                           padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(color: Colors.teal.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
-                          child: Text('Tahmini Fiyat: $_calculatedPrice TL', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.teal)),
+                          decoration: BoxDecoration(
+                              color: Colors.teal.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Text('Tahmini Fiyat: $_calculatedPrice TL',
+                              style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.teal)),
                         ),
                         const SizedBox(height: 20),
                         _isBookingLoading
-                          ? const CircularProgressIndicator()
-                          : SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: _makeBooking,
-                              style: ElevatedButton.styleFrom(backgroundColor: Colors.orange.shade700, padding: const EdgeInsets.symmetric(vertical: 16), textStyle: const TextStyle(fontSize: 16)),
-                              child: const Text('Rezervasyonu Onayla'),
-                            ),
-                          )
+                            ? const CircularProgressIndicator()
+                            : SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  onPressed: _makeBooking,
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.orange.shade700,
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 16),
+                                      textStyle: const TextStyle(fontSize: 16)),
+                                  child: const Text('Rezervasyonu Onayla'),
+                                ),
+                              )
                       ],
                     ),
                   )
