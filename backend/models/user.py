@@ -34,6 +34,10 @@ class User(Base):
     bookings_as_owner = relationship("Booking", foreign_keys="[Booking.owner_id]", back_populates="owner")
     payments_made = relationship("Payment", back_populates="customer")
 
+    @property
+    def full_name(self):
+        return f"{self.first_name or ''} {self.last_name or ''}".strip()
+
     def __repr__(self):
         return f"<User(email='{self.email}', role='{self.role}')>"
 
