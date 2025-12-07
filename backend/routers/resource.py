@@ -38,20 +38,28 @@ def list_resources(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user) # Herhangi bir doğrulanmış kullanıcı
 ):
-    # Kullanıcının rolüne göre kaynakları filtrele.
-    if current_user.role == UserRole.BUSINESS_OWNER:
-        # İşletme sahibi sadece kendi kaynaklarını listeler.
-        resources = crud_resource.get_resources_by_owner(db, current_user.user_id, skip, limit)
-    elif current_user.role == UserRole.CUSTOMER:
-        # Müşteriler, aktif olan tüm kaynakları görebilir (veya rezervasyon yapabilecekleri kaynakları).
-        # crud_resource.get_all_active_resources fonksiyonunun var olduğunu varsayalım.
-        # Eğer yoksa, get_resources fonksiyonunu owner_id filtresi olmadan çağırın.
-        resources = crud_resource.get_resources(db, skip=skip, limit=limit) 
-    # ADMIN rolü gibi diğer roller için de buraya özel mantık eklenebilir.
-    else:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Bu rol için kaynakları listeleme yetkiniz yok.")
-    
-    return resources
+    # DEBUG WRAPPER: 500 hatasının detayını görmek için
+    try:
+        # Kullanıcının rolüne göre kaynakları filtrele.
+        if current_user.role == UserRole.BUSINESS_OWNER:
+            # İşletme sahibi sadece kendi kaynaklarını listeler.
+            resources = crud_resource.get_resources_by_owner(db, current_user.user_id, skip, limit)
+        elif current_user.role == UserRole.CUSTOMER:
+            # Müşteriler, aktif olan tüm kaynakları görebilir (veya rezervasyon yapabilecekleri kaynakları).
+            # crud_resource.get_all_active_resources fonksiyonunun var olduğunu varsayalım.
+            # Eğer yoksa, get_resources fonksiyonunu owner_id filtresi olmadan çağırın.
+            resources = crud_resource.get_resources(db, skip=skip, limit=limit) 
+        # ADMIN rolü gibi diğer roller için de buraya özel mantık eklenebilir.
+        else:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Bu rol için kaynakları listeleme yetkiniz yok.")
+        
+        return resources
+    except HTTPException as he:
+        raise he
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"SUNUCU HATASI (list_resources): {str(e)}")
 
 # --- Belirli Bir Kaynağı Getirme ---
 @router.get("/{resource_id}", response_model=ResourceOut)
