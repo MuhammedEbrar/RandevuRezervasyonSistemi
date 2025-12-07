@@ -132,17 +132,6 @@ class _HomePageState extends State<HomePage> {
                                             const ResourceListPage()));
                               },
                             ),
-                            _buildMenuCard(
-                              title: 'Profil\nAyarları',
-                              icon: Icons.person_rounded,
-                              color: Colors.purpleAccent,
-                              onTap: () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text(
-                                            "Profil özellikleri yakında eklenecek.")));
-                              },
-                            ),
                           ],
                         )
                       : _buildRoleSelectionCards(),

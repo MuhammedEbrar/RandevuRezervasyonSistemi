@@ -42,13 +42,13 @@ class _ResourceListPageState extends State<ResourceListPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const OwnerBookingsPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const OwnerBookingsPage()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepOrangeAccent,
-                  foregroundColor: Colors.white
-                ),
+                    backgroundColor: Colors.deepOrangeAccent,
+                    foregroundColor: Colors.white),
               ),
             ),
             const Divider(),
@@ -56,10 +56,15 @@ class _ResourceListPageState extends State<ResourceListPage> {
               child: FutureBuilder<List<dynamic>>(
                 future: _resourcesFuture,
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
-                  if (snapshot.hasError) return Center(child: Text('Bir hata oluştu: ${snapshot.error}'));
-                  if (!snapshot.hasData || snapshot.data!.isEmpty) return const Center(child: Text('Gösterilecek hizmet bulunamadı.'));
-                  
+                  if (snapshot.connectionState == ConnectionState.waiting)
+                    return const Center(child: CircularProgressIndicator());
+                  if (snapshot.hasError)
+                    return Center(
+                        child: Text('Bir hata oluştu: ${snapshot.error}'));
+                  if (!snapshot.hasData || snapshot.data!.isEmpty)
+                    return const Center(
+                        child: Text('Gösterilecek hizmet bulunamadı.'));
+
                   final resources = snapshot.data!;
                   return ListView.builder(
                     itemCount: resources.length,
@@ -70,14 +75,16 @@ class _ResourceListPageState extends State<ResourceListPage> {
                         child: ListTile(
                           leading: const Icon(Icons.business_center_outlined),
                           title: Text(resource['name'] ?? 'İsimsiz Varlık'),
-                          subtitle: Text(resource['description'] ?? 'Açıklama yok.'),
+                          subtitle:
+                              Text(resource['description'] ?? 'Açıklama yok.'),
                           trailing: const Icon(Icons.arrow_forward_ios),
                           onTap: () {
                             if (resourceId != null) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => ResourceDetailPage(resourceId: resourceId),
+                                  builder: (context) => ResourceDetailPage(
+                                      resourceId: resourceId),
                                 ),
                               );
                             }
@@ -93,11 +100,19 @@ class _ResourceListPageState extends State<ResourceListPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final result = await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const AddResourcePage()),
           );
+
+          // Eğer yeni kayıt eklendiyse listeyi yenile
+          if (result == true || result == null) {
+            // null kontrolü de ekledik, emin olmak için
+            setState(() {
+              _resourcesFuture = _resourceService.getMyResources();
+            });
+          }
         },
         backgroundColor: Colors.blueGrey,
         child: const Icon(Icons.add),

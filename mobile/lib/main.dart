@@ -3,12 +3,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/date_symbol_data_local.dart'; // Eklendi
 import 'package:mobile/home_page.dart';
 
 // Tema değiştirme işlemini yönetmek için global bir değişken
 final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
 
-void main() {
+void main() async {
+  // async eklendi
+  WidgetsFlutterBinding.ensureInitialized(); // Ensure binding
+  await initializeDateFormatting('tr_TR', null); // Locale verisini yükle
+
   // Status bar rengini şeffaf yapalım
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,

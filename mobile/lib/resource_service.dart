@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 class ResourceService {
-  // Backend base URL (Android emulator için 10.0.2.2)
+  // Backend base URL (Android emulator için 10.0.2.2, Web için localhost, Gerçek Cihaz için IP)
   final String _baseUrl = 'http://13.60.31.19/api/v1';
   final _storage = const FlutterSecureStorage();
 
@@ -18,20 +18,17 @@ class ResourceService {
 
   // --- RESOURCE (VARLIK) İŞLEMLERİ ---
 
-  /// Kullanıcının rolüne göre kaynakları listeler.
-  /// İşletme sahibi: Kendi kaynaklarını görür.
-  /// Müşteri: Tüm aktif kaynakları görür.
   Future<List<dynamic>> getMyResources() async {
     final token = await _getToken();
-    if (token == null) return []; // Token yoksa boş liste döndür
+    if (token == null) return [];
 
-    final url = Uri.parse('$_baseUrl/resources/'); // GET /resources/
+    final url = Uri.parse('$_baseUrl/resources/');
     try {
       final response = await http.get(
         url,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token', // Token'ı header'a ekle
+          'Authorization': 'Bearer $token',
         },
       );
 
@@ -39,7 +36,7 @@ class ResourceService {
         return List<dynamic>.from(json.decode(response.body));
       } else {
         print(
-            'Kaynaklar alınırken hata (getMyResources): ${response.statusCode} - ${response.body}');
+            'Kaynaklar alınırken hata: ${response.statusCode} - ${response.body}');
         return [];
       }
     } catch (e) {
@@ -48,28 +45,42 @@ class ResourceService {
     }
   }
 
-  /// Yeni bir kaynak (hizmet) oluşturur. (Sadece İşletme Sahibi)
-  Future<bool> createResource(String name, String description,
-      {int capacity = 1, int price = 0, int duration = 60}) async {
+  /// Yeni bir kaynak (hizmet/mekan) oluşturur.
+  Future<bool> createResource({
+    required String name,
+    required String description,
+    required String type, // HIZMET veya MEKAN
+    int? capacity,
+    required Map<String, String> location, // address, city, country, zip_code
+    List<String>? tags,
+    List<String>? images,
+    String? cancellationPolicy,
+  }) async {
     final token = await _getToken();
     if (token == null) return false;
 
     final url = Uri.parse('$_baseUrl/resources/');
     try {
+      final body = {
+        'name': name,
+        'description': description,
+        'type': type,
+        'capacity': capacity ?? 1,
+        'location': location,
+        'tags': tags ?? [],
+        'images': images ?? [],
+        'cancellation_policy': cancellationPolicy,
+        // Varsayılan değerler
+        'booking_type': type == 'MEKAN' ? 'DURATION_BASED' : 'SLOT_BASED',
+      };
+
       final response = await http.post(
         url,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
-        body: json.encode({
-          'name': name,
-          'description': description,
-          'capacity': capacity,
-          'price': price, // Backend modeline uygun alanlar eklenebilir
-          'duration_minutes': duration,
-          // Diğer varsayılan alanlar backend'de ele alınıyor
-        }),
+        body: json.encode(body),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -85,18 +96,13 @@ class ResourceService {
     }
   }
 
-  /// Belirli bir kaynağın detaylarını getirir.
   Future<Map<String, dynamic>> getResourceById(String resourceId) async {
-    final token =
-        await _getToken(); // Public endpoint olsa da token varsa gönderelim
-    // Auth gerektirmeyen bir endpoint ise token kontrolü zorunlu olmayabilir ama
-    // user bağlamı için göndermek iyidir.
-
+    final token = await _getToken();
     final url = Uri.parse('$_baseUrl/resources/$resourceId');
     try {
       final headers = {'Content-Type': 'application/json'};
       if (token != null) {
-        headers['Authorization'] = 'Bearer $token'; // 'Bearer ' formatı önemli
+        headers['Authorization'] = 'Bearer $token';
       }
 
       final response = await http.get(url, headers: headers);
@@ -114,19 +120,102 @@ class ResourceService {
     }
   }
 
-  // --- MÜSAİTLİK VE REZERVASYON İŞLEMLERİ ---
+  // --- MÜSAİTLİK VE KURAL İŞLEMLERİ ---
 
-  /// Belirli bir tarih aralığı için müsait saat dilimlerini getirir.
-  /// Backend endpoint: GET /resources/{id}/availability/available_slots
+  /// Yeni bir müsaitlik kuralı oluşturur via POST /resources/{id}/availability
+  Future<bool> createAvailabilitySchedule({
+    required String resourceId,
+    required String dayOfWeek, // MONDAY, TUESDAY...
+    required String startTime, // HH:MM
+    required String endTime, // HH:MM
+    String type = "REGULAR", // REGULAR veya EXCEPTION
+    bool isAvailable = true,
+  }) async {
+    final token = await _getToken();
+    if (token == null) return false;
+
+    final url = Uri.parse('$_baseUrl/resources/$resourceId/availability/');
+    try {
+      final body = {
+        'day_of_week': dayOfWeek,
+        'start_time':
+            startTime, // "09:00:00" formatında olabilir, backend parsing önemli
+        'end_time': endTime,
+        'type': type,
+        'is_available': isAvailable,
+      };
+
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode(body),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      } else {
+        print('Takvim kuralı oluşturma hatası: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('API Hatası (createAvailabilitySchedule): $e');
+      return false;
+    }
+  }
+
+  /// Yeni bir fiyatlandırma kuralı oluşturur via POST /resources/{id}/pricing
+  Future<bool> createPricingRule({
+    required String resourceId,
+    required double basePrice,
+    required String durationType, // FIXED, PER_HOUR, PER_DAY...
+    int? minDuration,
+    int? maxDuration,
+    List<String>? applicableDays, // ["MONDAY", "FRIDAY"]
+  }) async {
+    final token = await _getToken();
+    if (token == null) return false;
+
+    final url = Uri.parse('$_baseUrl/resources/$resourceId/pricing/');
+    try {
+      final body = {
+        'base_price': basePrice,
+        'duration_type': durationType,
+        'min_duration': minDuration,
+        'max_duration': maxDuration,
+        'applicable_days': applicableDays,
+        'is_active': true
+      };
+
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode(body),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      } else {
+        print('Fiyat kuralı oluşturma hatası: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('API Hatası (createPricingRule): $e');
+      return false;
+    }
+  }
+
   Future<List<dynamic>> getAvailableSlots(
       String resourceId, DateTime date) async {
     final token = await _getToken();
     if (token == null) return [];
 
-    // Backend start_date ve end_date istiyor. Tek bir gün için her ikisi de aynı gün olabilir.
     final formattedDate = DateFormat('yyyy-MM-dd').format(date);
-
-    // Query parametreleri ekleniyor
     final url = Uri.parse(
         '$_baseUrl/resources/$resourceId/availability/available_slots?start_date=$formattedDate&end_date=$formattedDate');
 
@@ -140,21 +229,15 @@ class ResourceService {
       );
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        return data; // Backend [{"start_time": "...", "end_time": "..."}] formatında dönüyor
+        return List<dynamic>.from(json.decode(response.body));
       } else {
-        print(
-            'Müsaitlik alma hatası: ${response.statusCode} - ${response.body}');
         return [];
       }
     } catch (e) {
-      print('API Hatası (getAvailableSlots): $e');
       return [];
     }
   }
 
-  /// Rezervasyon fiyatını hesaplar.
-  /// POST /bookings/calculate_price
   Future<String?> calculatePrice(
       String resourceId, String startTime, String endTime) async {
     final token = await _getToken();
@@ -170,8 +253,8 @@ class ResourceService {
         },
         body: json.encode({
           'resource_id': resourceId,
-          'start_time': startTime, // ISO formatında olmalı
-          'end_time': endTime, // ISO formatında olmalı
+          'start_time': startTime,
+          'end_time': endTime,
         }),
       );
 
@@ -179,26 +262,21 @@ class ResourceService {
         final data = json.decode(response.body);
         return data['total_price'].toString();
       } else {
-        print('Fiyat hesaplama hatası: ${response.body}');
         return null;
       }
     } catch (e) {
-      print('API Hatası (calculatePrice): $e');
       return null;
     }
   }
 
-  /// Yeni bir rezervasyon oluşturur.
-  /// POST /bookings/
-  Future<bool> createBooking({
+  Future<String?> createBooking({
     required String resourceId,
     required String startTime,
     required String endTime,
-    // totalPrice genellikle backend'de tekrar hesaplanır ama frontend gönderiyorsa burada parametre olabilir
     String? totalPrice,
   }) async {
     final token = await _getToken();
-    if (token == null) return false;
+    if (token == null) return "Oturum hatası. Lütfen tekrar giriş yapın.";
 
     final url = Uri.parse('$_baseUrl/bookings/');
     try {
@@ -212,77 +290,54 @@ class ResourceService {
           'resource_id': resourceId,
           'start_time': startTime,
           'end_time': endTime,
-          // 'total_price': ... // Backend CreateBooking şemasında varsa eklenebilir
         }),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return true;
+        return null; // Başarılı
       } else {
-        print(
-            'Rezervasyon oluşturma hatası: ${response.statusCode} - ${response.body}');
-        return false;
+        // Backend'den gelen hata mesajını decode et
+        try {
+          final errorData = json.decode(utf8.decode(response.bodyBytes));
+          return errorData['detail'] ??
+              "Bir hata oluştu: ${response.statusCode}";
+        } catch (_) {
+          return "Bir hata oluştu: ${response.statusCode}";
+        }
       }
     } catch (e) {
-      print('API Hatası (createBooking): $e');
-      return false;
+      return "Bağlantı hatası: $e";
     }
   }
 
-  /// Müşterinin kendi rezervasyonlarını getirir.
-  /// GET /bookings/customer
   Future<List<dynamic>> getMyBookings() async {
     final token = await _getToken();
     if (token == null) return [];
 
     final url = Uri.parse('$_baseUrl/bookings/customer');
     try {
-      final response = await http.get(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
-
-      if (response.statusCode == 200) {
+      final response =
+          await http.get(url, headers: {'Authorization': 'Bearer $token'});
+      if (response.statusCode == 200)
         return List<dynamic>.from(json.decode(response.body));
-      } else {
-        print(
-            'Müşteri rezervasyonları hatası: ${response.statusCode} - ${response.body}');
-        return [];
-      }
+      return [];
     } catch (e) {
-      print('API Hatası (getMyBookings): $e');
       return [];
     }
   }
 
-  /// İşletme sahibine gelen rezervasyonları getirir.
-  /// GET /bookings/owner
   Future<List<dynamic>> getOwnerBookings() async {
     final token = await _getToken();
     if (token == null) return [];
 
     final url = Uri.parse('$_baseUrl/bookings/owner');
     try {
-      final response = await http.get(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
-
-      if (response.statusCode == 200) {
+      final response =
+          await http.get(url, headers: {'Authorization': 'Bearer $token'});
+      if (response.statusCode == 200)
         return List<dynamic>.from(json.decode(response.body));
-      } else {
-        print(
-            'İşletme rezervasyonları hatası: ${response.statusCode} - ${response.body}');
-        return [];
-      }
+      return [];
     } catch (e) {
-      print('API Hatası (getOwnerBookings): $e');
       return [];
     }
   }

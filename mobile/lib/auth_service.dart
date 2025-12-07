@@ -57,9 +57,14 @@ class AuthService {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final token = data['access_token'];
+        final user = data['user'];
 
-        // Token'ı safe storage'a kaydet
+        // Token ve kullanıcı bilgilerini safe storage'a kaydet
         await _storage.write(key: 'auth_token', value: token);
+        if (user != null) {
+          await _storage.write(key: 'user_id', value: user['user_id']);
+          await _storage.write(key: 'user_role', value: user['role']);
+        }
         return true;
       } else {
         print('Login başarısız: ${response.statusCode} - ${response.body}');

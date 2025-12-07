@@ -67,7 +67,10 @@ def get_applicable_pricing_rule(
     Belirli bir zaman aralığı için geçerli olan fiyatlandırma kuralını bulur.
     Eğer bir kuralda gün belirtilmemişse, tüm günler için geçerli sayılır.
     """
-    booking_day_of_week = booking_start_time.strftime('%A').upper()
+    # Locale-safe conversion (strftime depends on system locale)
+    days_mapping = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
+    booking_day_of_week = days_mapping[booking_start_time.weekday()]
+    
     booking_start_time_only = booking_start_time.time()
 
     query = db.query(PricingRule).filter(

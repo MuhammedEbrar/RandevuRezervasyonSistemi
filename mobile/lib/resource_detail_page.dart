@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:mobile/booking_success_page.dart';
 import 'package:mobile/resource_service.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:mobile/add_availability_page.dart';
+import 'package:mobile/add_pricing_page.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ResourceDetailPage extends StatefulWidget {
   final String resourceId;
@@ -15,10 +18,12 @@ class ResourceDetailPage extends StatefulWidget {
 
 class _ResourceDetailPageState extends State<ResourceDetailPage> {
   final ResourceService _resourceService = ResourceService();
+  final _storage = const FlutterSecureStorage();
   late Future<Map<String, dynamic>> _resourceFuture;
   Future<List<dynamic>>? _slotsFuture;
   String? _selectedSlot;
   String? _calculatedPrice;
+  String? _currentUserId;
   bool _isPriceLoading = false;
   bool _isBookingLoading = false;
   DateTime _focusedDay = DateTime.now();
@@ -30,6 +35,14 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
     _resourceFuture = _resourceService.getResourceById(widget.resourceId);
     _selectedDay = _focusedDay;
     _fetchSlots(_selectedDay!);
+    _loadCurrentUser();
+  }
+
+  void _loadCurrentUser() async {
+    String? userId = await _storage.read(key: 'user_id');
+    setState(() {
+      _currentUserId = userId;
+    });
   }
 
   void _fetchSlots(DateTime date) {
@@ -85,7 +98,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
     final endTime =
         "${_selectedDay!.toIso8601String().substring(0, 10)}T${(int.parse(_selectedSlot!.substring(0, 2)) + 1).toString().padLeft(2, '0')}:${_selectedSlot!.substring(3, 5)}:00";
 
-    bool success = await _resourceService.createBooking(
+    String? error = await _resourceService.createBooking(
       resourceId: widget.resourceId,
       startTime: startTime,
       endTime: endTime,
@@ -96,14 +109,14 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
       setState(() {
         _isBookingLoading = false;
       });
-      if (success) {
+      if (error == null) {
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => const BookingSuccessPage()));
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Rezervasyon oluşturulamadı.')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(error)));
       }
     }
   }
@@ -111,7 +124,9 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Varlık Detayı')),
+      appBar: AppBar(
+        title: const Text('Varlık Detayı'),
+      ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: _resourceFuture,
         builder: (context, snapshot) {
@@ -134,9 +149,68 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                 const SizedBox(height: 8),
                 Text(resource['description'] ?? 'Açıklama mevcut değil.',
                     style: TextStyle(fontSize: 16, color: Colors.grey[700])),
+
+                const SizedBox(height: 24),
+                // Yönetim Butonları
+                // Yönetim Butonları (Sadece sahibi görebilir)
+                if (_currentUserId == resource['owner_id'])
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          icon: const Icon(Icons.calendar_today),
+                          label: const Text('Müsaitlik Ekle',
+                              textAlign: TextAlign.center),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blueGrey.shade700,
+                            foregroundColor: Colors.white,
+                            fixedSize: const Size.fromHeight(72),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            elevation: 2,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => AddAvailabilityPage(
+                                        resourceId: widget.resourceId)));
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          icon: const Icon(Icons.attach_money),
+                          label: const Text('Fiyat Ekle',
+                              textAlign: TextAlign.center),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green.shade700,
+                            foregroundColor: Colors.white,
+                            fixedSize: const Size.fromHeight(72),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            elevation: 2,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => AddPricingPage(
+                                        resourceId: widget.resourceId)));
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                if (_currentUserId == resource['owner_id'])
+                  const SizedBox(height: 24),
+
                 const Divider(height: 40, thickness: 1),
                 TableCalendar(
                   locale: 'tr_TR',
+                  headerStyle: const HeaderStyle(
+                      formatButtonVisible: false, titleCentered: true),
                   firstDay: DateTime.utc(2020, 1, 1),
                   lastDay: DateTime.utc(2030, 12, 31),
                   focusedDay: _focusedDay,
