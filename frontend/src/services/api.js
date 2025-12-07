@@ -76,3 +76,7 @@ export const calculatePrice = (resourceId, startTime, endTime) => apiFetch('/boo
 export const createBooking = (bookingData) => apiFetch('/bookings/', { method: 'POST', body: JSON.stringify(bookingData) });
 export const getMyBookings = () => apiFetch('/bookings/customer');
 export const cancelBooking = (bookingId) => apiFetch(`/bookings/${bookingId}/cancel`, { method: 'PUT' });
+
+// --- OWNER BOOKING ENDPOINTS ---
+export const getOwnerBookings = () => apiFetch('/bookings/owner');
+export const updateBookingStatus = (bookingId, status) => apiFetch(`/bookings/${bookingId}/status`, { method: 'PUT', body: JSON.stringify({ status }) });
