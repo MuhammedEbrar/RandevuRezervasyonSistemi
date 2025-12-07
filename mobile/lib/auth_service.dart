@@ -5,7 +5,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
+  // Lütfen buraya bilgisayarınızın IP adresini yazın (Örn: 192.168.1.35)
+  // Terminalde 'ipconfig' yazarak IPv4 adresinizi öğrenebilirsiniz.
   final String _baseUrl = 'http://13.60.31.19/api/v1/auth';
+
   final _storage = const FlutterSecureStorage();
 
   Future<void> register({

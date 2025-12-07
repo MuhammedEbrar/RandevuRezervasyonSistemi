@@ -1,0 +1,1310 @@
+
+--- ERROR AT http://10.33.14.186:8001/api/v1/bookings/calculate_price ---
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 1506, in __getattr__
+    return getattr(self.comparator, key)
+AttributeError: 'Comparator' object has no attribute 'any'. Did you mean: 'any_'?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\main.py", line 23, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 156, in call_next
+    raise app_exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\routers\bookings.py", line 40, in calculate_price
+    pricing_rule = crud_pricing.get_applicable_pricing_rule(
+        db, resource_id=data.resource_id, booking_start_time=data.start_time, booking_end_time=data.end_time
+    )
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\crud\pricing.py", line 83, in get_applicable_pricing_rule
+    PricingRule.applicable_days.any(ApplicableDay.ALL.value),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 951, in any
+    return self.operate(PropComparator.any_op, criterion, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 453, in operate
+    return op(self.comparator, *other, **kwargs)  # type: ignore[no-any-return]  # noqa: E501
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 849, in _any_op
+    return a.any(b, **kwargs)
+           ~~~~~^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 951, in any
+    return self.operate(PropComparator.any_op, criterion, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\properties.py", line 479, in operate
+    return op(self.__clause_element__(), *other, **kwargs)  # type: ignore[no-any-return]  # noqa: E501
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 849, in _any_op
+    return a.any(b, **kwargs)
+           ^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 1508, in __getattr__
+    raise AttributeError(
+    ...<6 lines>...
+    ) from err
+AttributeError: Neither 'AnnotatedColumn' object nor 'Comparator' object has an attribute 'any'. Did you mean: 'any_'?
+
+--- ERROR AT http://10.33.14.186:8001/api/v1/bookings/calculate_price ---
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 1506, in __getattr__
+    return getattr(self.comparator, key)
+AttributeError: 'Comparator' object has no attribute 'any'. Did you mean: 'any_'?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\main.py", line 23, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 156, in call_next
+    raise app_exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\routers\bookings.py", line 40, in calculate_price
+    pricing_rule = crud_pricing.get_applicable_pricing_rule(
+        db, resource_id=data.resource_id, booking_start_time=data.start_time, booking_end_time=data.end_time
+    )
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\crud\pricing.py", line 83, in get_applicable_pricing_rule
+    PricingRule.applicable_days.any(ApplicableDay.ALL.value),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 951, in any
+    return self.operate(PropComparator.any_op, criterion, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 453, in operate
+    return op(self.comparator, *other, **kwargs)  # type: ignore[no-any-return]  # noqa: E501
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 849, in _any_op
+    return a.any(b, **kwargs)
+           ~~~~~^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 951, in any
+    return self.operate(PropComparator.any_op, criterion, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\properties.py", line 479, in operate
+    return op(self.__clause_element__(), *other, **kwargs)  # type: ignore[no-any-return]  # noqa: E501
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 849, in _any_op
+    return a.any(b, **kwargs)
+           ^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 1508, in __getattr__
+    raise AttributeError(
+    ...<6 lines>...
+    ) from err
+AttributeError: Neither 'AnnotatedColumn' object nor 'Comparator' object has an attribute 'any'. Did you mean: 'any_'?
+
+--- ERROR AT http://10.33.14.186:8001/api/v1/bookings/calculate_price ---
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 1506, in __getattr__
+    return getattr(self.comparator, key)
+AttributeError: 'Comparator' object has no attribute 'any'. Did you mean: 'any_'?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\main.py", line 23, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 156, in call_next
+    raise app_exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\routers\bookings.py", line 40, in calculate_price
+    pricing_rule = crud_pricing.get_applicable_pricing_rule(
+        db, resource_id=data.resource_id, booking_start_time=data.start_time, booking_end_time=data.end_time
+    )
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\crud\pricing.py", line 83, in get_applicable_pricing_rule
+    PricingRule.applicable_days.any(ApplicableDay.ALL.value),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 951, in any
+    return self.operate(PropComparator.any_op, criterion, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 453, in operate
+    return op(self.comparator, *other, **kwargs)  # type: ignore[no-any-return]  # noqa: E501
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 849, in _any_op
+    return a.any(b, **kwargs)
+           ~~~~~^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 951, in any
+    return self.operate(PropComparator.any_op, criterion, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\properties.py", line 479, in operate
+    return op(self.__clause_element__(), *other, **kwargs)  # type: ignore[no-any-return]  # noqa: E501
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 849, in _any_op
+    return a.any(b, **kwargs)
+           ^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 1508, in __getattr__
+    raise AttributeError(
+    ...<6 lines>...
+    ) from err
+AttributeError: Neither 'AnnotatedColumn' object nor 'Comparator' object has an attribute 'any'. Did you mean: 'any_'?
+
+--- ERROR AT http://10.33.14.186:8001/api/v1/bookings/calculate_price ---
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 1506, in __getattr__
+    return getattr(self.comparator, key)
+AttributeError: 'Comparator' object has no attribute 'any'. Did you mean: 'any_'?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\main.py", line 23, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 156, in call_next
+    raise app_exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\routers\bookings.py", line 40, in calculate_price
+    pricing_rule = crud_pricing.get_applicable_pricing_rule(
+        db, resource_id=data.resource_id, booking_start_time=data.start_time, booking_end_time=data.end_time
+    )
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\crud\pricing.py", line 83, in get_applicable_pricing_rule
+    PricingRule.applicable_days.any(ApplicableDay.ALL.value),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 951, in any
+    return self.operate(PropComparator.any_op, criterion, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 453, in operate
+    return op(self.comparator, *other, **kwargs)  # type: ignore[no-any-return]  # noqa: E501
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 849, in _any_op
+    return a.any(b, **kwargs)
+           ~~~~~^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 951, in any
+    return self.operate(PropComparator.any_op, criterion, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\properties.py", line 479, in operate
+    return op(self.__clause_element__(), *other, **kwargs)  # type: ignore[no-any-return]  # noqa: E501
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 849, in _any_op
+    return a.any(b, **kwargs)
+           ^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 1508, in __getattr__
+    raise AttributeError(
+    ...<6 lines>...
+    ) from err
+AttributeError: Neither 'AnnotatedColumn' object nor 'Comparator' object has an attribute 'any'. Did you mean: 'any_'?
+
+--- ERROR AT http://10.33.14.186:8001/api/v1/bookings/calculate_price ---
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 1506, in __getattr__
+    return getattr(self.comparator, key)
+AttributeError: 'Comparator' object has no attribute 'any'. Did you mean: 'any_'?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\main.py", line 23, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 156, in call_next
+    raise app_exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\routers\bookings.py", line 40, in calculate_price
+    pricing_rule = crud_pricing.get_applicable_pricing_rule(
+        db, resource_id=data.resource_id, booking_start_time=data.start_time, booking_end_time=data.end_time
+    )
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\crud\pricing.py", line 83, in get_applicable_pricing_rule
+    PricingRule.applicable_days.any(ApplicableDay.ALL.value),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 951, in any
+    return self.operate(PropComparator.any_op, criterion, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 453, in operate
+    return op(self.comparator, *other, **kwargs)  # type: ignore[no-any-return]  # noqa: E501
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 849, in _any_op
+    return a.any(b, **kwargs)
+           ~~~~~^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 951, in any
+    return self.operate(PropComparator.any_op, criterion, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\properties.py", line 479, in operate
+    return op(self.__clause_element__(), *other, **kwargs)  # type: ignore[no-any-return]  # noqa: E501
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 849, in _any_op
+    return a.any(b, **kwargs)
+           ^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 1508, in __getattr__
+    raise AttributeError(
+    ...<6 lines>...
+    ) from err
+AttributeError: Neither 'AnnotatedColumn' object nor 'Comparator' object has an attribute 'any'. Did you mean: 'any_'?
+
+--- ERROR AT http://10.33.14.186:8001/api/v1/bookings/calculate_price ---
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 1506, in __getattr__
+    return getattr(self.comparator, key)
+AttributeError: 'Comparator' object has no attribute 'any'. Did you mean: 'any_'?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\main.py", line 23, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 156, in call_next
+    raise app_exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\routers\bookings.py", line 40, in calculate_price
+    pricing_rule = crud_pricing.get_applicable_pricing_rule(
+        db, resource_id=data.resource_id, booking_start_time=data.start_time, booking_end_time=data.end_time
+    )
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\crud\pricing.py", line 83, in get_applicable_pricing_rule
+    PricingRule.applicable_days.any(ApplicableDay.ALL.value),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 951, in any
+    return self.operate(PropComparator.any_op, criterion, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 453, in operate
+    return op(self.comparator, *other, **kwargs)  # type: ignore[no-any-return]  # noqa: E501
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 849, in _any_op
+    return a.any(b, **kwargs)
+           ~~~~~^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 951, in any
+    return self.operate(PropComparator.any_op, criterion, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\properties.py", line 479, in operate
+    return op(self.__clause_element__(), *other, **kwargs)  # type: ignore[no-any-return]  # noqa: E501
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 849, in _any_op
+    return a.any(b, **kwargs)
+           ^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 1508, in __getattr__
+    raise AttributeError(
+    ...<6 lines>...
+    ) from err
+AttributeError: Neither 'AnnotatedColumn' object nor 'Comparator' object has an attribute 'any'. Did you mean: 'any_'?
+
+--- ERROR AT http://10.33.14.186:8001/api/v1/bookings/calculate_price ---
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 1506, in __getattr__
+    return getattr(self.comparator, key)
+AttributeError: 'Comparator' object has no attribute 'any'. Did you mean: 'any_'?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\main.py", line 23, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 156, in call_next
+    raise app_exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\routers\bookings.py", line 40, in calculate_price
+    pricing_rule = crud_pricing.get_applicable_pricing_rule(
+        db, resource_id=data.resource_id, booking_start_time=data.start_time, booking_end_time=data.end_time
+    )
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\crud\pricing.py", line 83, in get_applicable_pricing_rule
+    PricingRule.applicable_days.any(ApplicableDay.ALL.value),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 951, in any
+    return self.operate(PropComparator.any_op, criterion, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 453, in operate
+    return op(self.comparator, *other, **kwargs)  # type: ignore[no-any-return]  # noqa: E501
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 849, in _any_op
+    return a.any(b, **kwargs)
+           ~~~~~^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 951, in any
+    return self.operate(PropComparator.any_op, criterion, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\properties.py", line 479, in operate
+    return op(self.__clause_element__(), *other, **kwargs)  # type: ignore[no-any-return]  # noqa: E501
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 849, in _any_op
+    return a.any(b, **kwargs)
+           ^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 1508, in __getattr__
+    raise AttributeError(
+    ...<6 lines>...
+    ) from err
+AttributeError: Neither 'AnnotatedColumn' object nor 'Comparator' object has an attribute 'any'. Did you mean: 'any_'?
+
+--- ERROR AT http://10.33.14.186:8001/api/v1/bookings/calculate_price ---
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 1506, in __getattr__
+    return getattr(self.comparator, key)
+AttributeError: 'Comparator' object has no attribute 'any'. Did you mean: 'any_'?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\main.py", line 23, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 156, in call_next
+    raise app_exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\routers\bookings.py", line 40, in calculate_price
+    pricing_rule = crud_pricing.get_applicable_pricing_rule(
+        db, resource_id=data.resource_id, booking_start_time=data.start_time, booking_end_time=data.end_time
+    )
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\crud\pricing.py", line 83, in get_applicable_pricing_rule
+    PricingRule.applicable_days.any(ApplicableDay.ALL.value),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 951, in any
+    return self.operate(PropComparator.any_op, criterion, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 453, in operate
+    return op(self.comparator, *other, **kwargs)  # type: ignore[no-any-return]  # noqa: E501
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 849, in _any_op
+    return a.any(b, **kwargs)
+           ~~~~~^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 951, in any
+    return self.operate(PropComparator.any_op, criterion, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\properties.py", line 479, in operate
+    return op(self.__clause_element__(), *other, **kwargs)  # type: ignore[no-any-return]  # noqa: E501
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 849, in _any_op
+    return a.any(b, **kwargs)
+           ^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 1508, in __getattr__
+    raise AttributeError(
+    ...<6 lines>...
+    ) from err
+AttributeError: Neither 'AnnotatedColumn' object nor 'Comparator' object has an attribute 'any'. Did you mean: 'any_'?
+
+--- ERROR AT http://10.33.14.186:8001/api/v1/bookings/calculate_price ---
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 1506, in __getattr__
+    return getattr(self.comparator, key)
+AttributeError: 'Comparator' object has no attribute 'any'. Did you mean: 'any_'?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\main.py", line 23, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 156, in call_next
+    raise app_exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\routers\bookings.py", line 40, in calculate_price
+    pricing_rule = crud_pricing.get_applicable_pricing_rule(
+        db, resource_id=data.resource_id, booking_start_time=data.start_time, booking_end_time=data.end_time
+    )
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\crud\pricing.py", line 83, in get_applicable_pricing_rule
+    PricingRule.applicable_days.any(ApplicableDay.ALL.value),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 951, in any
+    return self.operate(PropComparator.any_op, criterion, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 453, in operate
+    return op(self.comparator, *other, **kwargs)  # type: ignore[no-any-return]  # noqa: E501
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 849, in _any_op
+    return a.any(b, **kwargs)
+           ~~~~~^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 951, in any
+    return self.operate(PropComparator.any_op, criterion, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\properties.py", line 479, in operate
+    return op(self.__clause_element__(), *other, **kwargs)  # type: ignore[no-any-return]  # noqa: E501
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 849, in _any_op
+    return a.any(b, **kwargs)
+           ^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 1508, in __getattr__
+    raise AttributeError(
+    ...<6 lines>...
+    ) from err
+AttributeError: Neither 'AnnotatedColumn' object nor 'Comparator' object has an attribute 'any'. Did you mean: 'any_'?
+
+--- ERROR AT http://10.33.14.186:8001/api/v1/bookings/calculate_price ---
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 1506, in __getattr__
+    return getattr(self.comparator, key)
+AttributeError: 'Comparator' object has no attribute 'any'. Did you mean: 'any_'?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\main.py", line 23, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 156, in call_next
+    raise app_exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\routers\bookings.py", line 40, in calculate_price
+    pricing_rule = crud_pricing.get_applicable_pricing_rule(
+        db, resource_id=data.resource_id, booking_start_time=data.start_time, booking_end_time=data.end_time
+    )
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\crud\pricing.py", line 83, in get_applicable_pricing_rule
+    PricingRule.applicable_days.any(ApplicableDay.ALL.value),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 951, in any
+    return self.operate(PropComparator.any_op, criterion, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 453, in operate
+    return op(self.comparator, *other, **kwargs)  # type: ignore[no-any-return]  # noqa: E501
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 849, in _any_op
+    return a.any(b, **kwargs)
+           ~~~~~^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 951, in any
+    return self.operate(PropComparator.any_op, criterion, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\properties.py", line 479, in operate
+    return op(self.__clause_element__(), *other, **kwargs)  # type: ignore[no-any-return]  # noqa: E501
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 849, in _any_op
+    return a.any(b, **kwargs)
+           ^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 1508, in __getattr__
+    raise AttributeError(
+    ...<6 lines>...
+    ) from err
+AttributeError: Neither 'AnnotatedColumn' object nor 'Comparator' object has an attribute 'any'. Did you mean: 'any_'?
+
+--- ERROR AT http://10.33.14.186:8001/api/v1/bookings/ ---
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 148, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream from None
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\main.py", line 23, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 156, in call_next
+    raise app_exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 291, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\dependencies\utils.py", line 666, in solve_dependencies
+    ) = await request_body_to_args(  # body_params checked above
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\dependencies\utils.py", line 927, in request_body_to_args
+    v_, errors_ = _validate_value_with_model_field(
+                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        field=first_field, value=body_to_process, values=values, loc=loc
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\dependencies\utils.py", line 706, in _validate_value_with_model_field
+    v_, errors_ = field.validate(value, values, loc=loc)
+                  ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\_compat.py", line 130, in validate
+    self._type_adapter.validate_python(value, from_attributes=True),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\pydantic\type_adapter.py", line 421, in validate_python
+    return self.validator.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        object,
+        ^^^^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\schemas\booking.py", line 40, in validate_time_range
+    if self.end_time <= self.start_time:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: can't compare offset-naive and offset-aware datetimes
+
+--- ERROR AT http://10.33.14.186:8001/api/v1/bookings/ ---
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 148, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream from None
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\main.py", line 23, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 156, in call_next
+    raise app_exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 291, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\dependencies\utils.py", line 666, in solve_dependencies
+    ) = await request_body_to_args(  # body_params checked above
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\dependencies\utils.py", line 927, in request_body_to_args
+    v_, errors_ = _validate_value_with_model_field(
+                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        field=first_field, value=body_to_process, values=values, loc=loc
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\dependencies\utils.py", line 706, in _validate_value_with_model_field
+    v_, errors_ = field.validate(value, values, loc=loc)
+                  ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\_compat.py", line 130, in validate
+    self._type_adapter.validate_python(value, from_attributes=True),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\pydantic\type_adapter.py", line 421, in validate_python
+    return self.validator.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        object,
+        ^^^^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\schemas\booking.py", line 40, in validate_time_range
+    if self.end_time <= self.start_time:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: can't compare offset-naive and offset-aware datetimes
+
+--- ERROR AT http://10.33.14.186:8001/api/v1/bookings/ ---
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 148, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream from None
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\main.py", line 23, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 156, in call_next
+    raise app_exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 291, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\dependencies\utils.py", line 666, in solve_dependencies
+    ) = await request_body_to_args(  # body_params checked above
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\dependencies\utils.py", line 927, in request_body_to_args
+    v_, errors_ = _validate_value_with_model_field(
+                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        field=first_field, value=body_to_process, values=values, loc=loc
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\dependencies\utils.py", line 706, in _validate_value_with_model_field
+    v_, errors_ = field.validate(value, values, loc=loc)
+                  ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\_compat.py", line 130, in validate
+    self._type_adapter.validate_python(value, from_attributes=True),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\pydantic\type_adapter.py", line 421, in validate_python
+    return self.validator.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        object,
+        ^^^^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\schemas\booking.py", line 40, in validate_time_range
+    if self.end_time <= self.start_time:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: can't compare offset-naive and offset-aware datetimes
+
+--- ERROR AT http://10.33.14.186:8001/api/v1/bookings/ ---
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 148, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream from None
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\main.py", line 23, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 156, in call_next
+    raise app_exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 291, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\dependencies\utils.py", line 666, in solve_dependencies
+    ) = await request_body_to_args(  # body_params checked above
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\dependencies\utils.py", line 927, in request_body_to_args
+    v_, errors_ = _validate_value_with_model_field(
+                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        field=first_field, value=body_to_process, values=values, loc=loc
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\dependencies\utils.py", line 706, in _validate_value_with_model_field
+    v_, errors_ = field.validate(value, values, loc=loc)
+                  ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\_compat.py", line 130, in validate
+    self._type_adapter.validate_python(value, from_attributes=True),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\pydantic\type_adapter.py", line 421, in validate_python
+    return self.validator.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        object,
+        ^^^^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\schemas\booking.py", line 40, in validate_time_range
+    if self.end_time <= self.start_time:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: can't compare offset-naive and offset-aware datetimes
+
+--- ERROR AT http://10.33.14.186:8001/api/v1/bookings/ ---
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 148, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream from None
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\main.py", line 23, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 156, in call_next
+    raise app_exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 291, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\dependencies\utils.py", line 666, in solve_dependencies
+    ) = await request_body_to_args(  # body_params checked above
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\dependencies\utils.py", line 927, in request_body_to_args
+    v_, errors_ = _validate_value_with_model_field(
+                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        field=first_field, value=body_to_process, values=values, loc=loc
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\dependencies\utils.py", line 706, in _validate_value_with_model_field
+    v_, errors_ = field.validate(value, values, loc=loc)
+                  ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\_compat.py", line 130, in validate
+    self._type_adapter.validate_python(value, from_attributes=True),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\pydantic\type_adapter.py", line 421, in validate_python
+    return self.validator.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        object,
+        ^^^^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\schemas\booking.py", line 40, in validate_time_range
+    if self.end_time <= self.start_time:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: can't compare offset-naive and offset-aware datetimes
+
+--- ERROR AT http://10.33.14.186:8001/api/v1/bookings/ ---
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 148, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream from None
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\main.py", line 23, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 156, in call_next
+    raise app_exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 291, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\dependencies\utils.py", line 666, in solve_dependencies
+    ) = await request_body_to_args(  # body_params checked above
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\dependencies\utils.py", line 927, in request_body_to_args
+    v_, errors_ = _validate_value_with_model_field(
+                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        field=first_field, value=body_to_process, values=values, loc=loc
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\dependencies\utils.py", line 706, in _validate_value_with_model_field
+    v_, errors_ = field.validate(value, values, loc=loc)
+                  ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\_compat.py", line 130, in validate
+    self._type_adapter.validate_python(value, from_attributes=True),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\pydantic\type_adapter.py", line 421, in validate_python
+    return self.validator.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        object,
+        ^^^^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\schemas\booking.py", line 53, in validate_time_range
+    duration = self.end_time - self.start_time
+               ~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
+TypeError: can't subtract offset-naive and offset-aware datetimes
+
+--- ERROR AT http://10.33.14.186:8001/api/v1/bookings/ ---
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 148, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream from None
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\main.py", line 23, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 156, in call_next
+    raise app_exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\routing.py", line 291, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\dependencies\utils.py", line 666, in solve_dependencies
+    ) = await request_body_to_args(  # body_params checked above
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\dependencies\utils.py", line 927, in request_body_to_args
+    v_, errors_ = _validate_value_with_model_field(
+                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        field=first_field, value=body_to_process, values=values, loc=loc
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\dependencies\utils.py", line 706, in _validate_value_with_model_field
+    v_, errors_ = field.validate(value, values, loc=loc)
+                  ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\fastapi\_compat.py", line 130, in validate
+    self._type_adapter.validate_python(value, from_attributes=True),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\venv\Lib\site-packages\pydantic\type_adapter.py", line 421, in validate_python
+    return self.validator.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        object,
+        ^^^^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\ISKENDER\Desktop\ISKENDER\Okul\Staj\staj2\proje\RandevuRezervasyonSistemi\backend\schemas\booking.py", line 53, in validate_time_range
+    duration = self.end_time - self.start_time
+               ~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
+TypeError: can't subtract offset-naive and offset-aware datetimes

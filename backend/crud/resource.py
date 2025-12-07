@@ -28,7 +28,8 @@ def create_resource(db: Session, resource_in: ResourceCreate, owner_id: UUID) ->
     try:
         db_resource = Resource(
             **resource_in.model_dump(),
-            owner_id=owner_id
+            owner_id=owner_id,
+            is_active=True # KULLANICI DENEYİMİ İÇİN VARSAYILAN OLARAK AKTİF OLSUN
         )
         db.add(db_resource)
         db.commit()

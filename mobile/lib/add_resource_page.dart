@@ -70,9 +70,7 @@ class _AddResourcePageState extends State<AddResourcePage> {
       name: _nameController.text,
       description: _descriptionController.text,
       type: _selectedType,
-      capacity: _selectedType == 'MEKAN'
-          ? int.tryParse(_capacityController.text)
-          : null,
+      capacity: int.tryParse(_capacityController.text) ?? 1,
       location: {
         'address': _addressController.text,
         'city': _cityController.text,
@@ -148,16 +146,17 @@ class _AddResourcePageState extends State<AddResourcePage> {
                           setState(() => _selectedType = value);
                       },
                     ),
-                    if (_selectedType == 'MEKAN') ...[
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: _capacityController,
-                        decoration: const InputDecoration(
-                            labelText: 'Kapasite',
-                            border: OutlineInputBorder()),
-                        keyboardType: TextInputType.number,
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _capacityController,
+                      decoration: const InputDecoration(
+                        labelText: 'Kapasite',
+                        border: OutlineInputBorder(),
+                        helperText:
+                            'Hizmet veya mekan için kişi/bilet kapasitesi. Boş bırakılırsa 1 kabul edilir.',
                       ),
-                    ],
+                      keyboardType: TextInputType.number,
+                    ),
                     const SizedBox(height: 24),
                     _buildSectionTitle('Konum Bilgileri'),
                     TextFormField(

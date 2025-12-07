@@ -32,8 +32,3 @@ app.include_router(availability.router, prefix=API_PREFIX)
 app.include_router(pricing.router, prefix=API_PREFIX)
 app.include_router(bookings.router, prefix=API_PREFIX)
 app.include_router(payments.router, prefix=API_PREFIX)
-
-
-@app.get("/")
-async def read_root():
-    return {"message": "Randevu ve Kiralama Platformu API'sine Hoş Geldiniz!"}

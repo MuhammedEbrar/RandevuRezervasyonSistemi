@@ -58,75 +58,64 @@ async def create_booking(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    # DEBUG WRAPPER: 500 hatasının detayını görmek için
+    """Yeni bir rezervasyon oluşturur ve oluşturmadan önce tüm kuralları kontrol eder."""
+    if current_user.role != UserRole.CUSTOMER:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Sadece müşteriler rezervasyon oluşturabilir.")
+
+    db_resource = crud_resource.get_resource_by_id(db, booking_in.resource_id)
+    if not db_resource:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Kaynak bulunamadı.")
+
+    # TIMEZONE HANDLING: Ensure datetimes are offset-aware
+    if booking_in.start_time.tzinfo is None:
+        booking_in.start_time = booking_in.start_time.replace(tzinfo=timezone.utc)
+    if booking_in.end_time.tzinfo is None:
+        booking_in.end_time = booking_in.end_time.replace(tzinfo=timezone.utc)
+
+    if booking_in.end_time <= booking_in.start_time:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Bitiş zamanı başlangıç zamanından sonra olmalıdır.")
+
+    # ÇAKIŞMA KONTROLÜ - Çifte rezervasyonu önle
+    conflicting_bookings = crud_bookings.check_booking_conflicts(
+        db=db,
+        resource_id=booking_in.resource_id,
+        start_time=booking_in.start_time,
+        end_time=booking_in.end_time
+    )
+    if conflicting_bookings:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"Bu zaman diliminde {len(conflicting_bookings)} adet çakışan rezervasyon bulunmaktadır. Lütfen farklı bir zaman seçiniz."
+        )
+
+    # 1. Geçerli Fiyat Kuralını Bul
+    applicable_rule = crud_pricing.get_applicable_pricing_rule(db, db_resource.resource_id, booking_in.start_time, booking_in.end_time)
+    if not applicable_rule:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Bu zaman aralığı için geçerli bir fiyatlandırma kuralı bulunamadı.")
+
+    # 2. Süre Limitlerini DAKİKA Bazında Kontrol Et
+    booking_duration_minutes = (booking_in.end_time - booking_in.start_time).total_seconds() / 60
+    if applicable_rule.min_duration and booking_duration_minutes < applicable_rule.min_duration:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Minimum kiralama süresi {applicable_rule.min_duration} dakikadır.")
+    if applicable_rule.max_duration and booking_duration_minutes > applicable_rule.max_duration:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Maksimum kiralama süresi {applicable_rule.max_duration} dakikadır.")
+    
+    # 3. Diğer Limitleri Kontrol Et (Günlük, Müşteri Başına vb.)
+    # (Bu kontroller bir önceki cevabımızdaki gibi burada yer alabilir)
+    
+    # 4. Toplam Fiyatı Hesapla
+    total_price = crud_pricing.calculate_price_from_rule(
+        pricing_rule=applicable_rule, start_time=booking_in.start_time, end_time=booking_in.end_time
+    )
+
+    # 5. Veritabanına Kaydet
     try:
-        """Yeni bir rezervasyon oluşturur ve oluşturmadan önce tüm kuralları kontrol eder."""
-        if current_user.role != UserRole.CUSTOMER:
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Sadece müşteriler rezervasyon oluşturabilir.")
-
-        db_resource = crud_resource.get_resource_by_id(db, booking_in.resource_id)
-        if not db_resource:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Kaynak bulunamadı.")
-
-        # TIMEZONE HANDLING: Ensure datetimes are offset-aware
-        if booking_in.start_time.tzinfo is None:
-            booking_in.start_time = booking_in.start_time.replace(tzinfo=timezone.utc)
-        if booking_in.end_time.tzinfo is None:
-            booking_in.end_time = booking_in.end_time.replace(tzinfo=timezone.utc)
-
-        if booking_in.end_time <= booking_in.start_time:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Bitiş zamanı başlangıç zamanından sonra olmalıdır.")
-
-        # ÇAKIŞMA KONTROLÜ - Çifte rezervasyonu önle
-        conflicting_bookings = crud_bookings.check_booking_conflicts(
-            db=db,
-            resource_id=booking_in.resource_id,
-            start_time=booking_in.start_time,
-            end_time=booking_in.end_time
+        new_booking = crud_bookings.create_booking(
+            db=db, booking_in=booking_in, customer_id=current_user.user_id, owner_id=db_resource.owner_id, total_price=total_price
         )
-        if conflicting_bookings:
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail=f"Bu zaman diliminde {len(conflicting_bookings)} adet çakışan rezervasyon bulunmaktadır. Lütfen farklı bir zaman seçiniz."
-            )
-
-        # 1. Geçerli Fiyat Kuralını Bul
-        applicable_rule = crud_pricing.get_applicable_pricing_rule(db, db_resource.resource_id, booking_in.start_time, booking_in.end_time)
-        if not applicable_rule:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Bu zaman aralığı için geçerli bir fiyatlandırma kuralı bulunamadı.")
-
-        # 2. Süre Limitlerini DAKİKA Bazında Kontrol Et
-        booking_duration_minutes = (booking_in.end_time - booking_in.start_time).total_seconds() / 60
-        if applicable_rule.min_duration and booking_duration_minutes < applicable_rule.min_duration:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Minimum kiralama süresi {applicable_rule.min_duration} dakikadır.")
-        if applicable_rule.max_duration and booking_duration_minutes > applicable_rule.max_duration:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Maksimum kiralama süresi {applicable_rule.max_duration} dakikadır.")
-        
-        # 3. Diğer Limitleri Kontrol Et (Günlük, Müşteri Başına vb.)
-        # (Bu kontroller bir önceki cevabımızdaki gibi burada yer alabilir)
-        
-        # 4. Toplam Fiyatı Hesapla
-        total_price = crud_pricing.calculate_price_from_rule(
-            pricing_rule=applicable_rule, start_time=booking_in.start_time, end_time=booking_in.end_time
-        )
-
-        # 5. Veritabanına Kaydet
-        try:
-            new_booking = crud_bookings.create_booking(
-                db=db, booking_in=booking_in, customer_id=current_user.user_id, owner_id=db_resource.owner_id, total_price=total_price
-            )
-            return new_booking
-        except ValueError as e:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
-            
-    except HTTPException as he:
-        # HTTP hatalarını değiştirmeden fırlat
-        raise he
-    except Exception as e:
-        # Diğer tüm hataları (500) yakala ve detayını string olarak dön
-        import traceback
-        traceback.print_exc() # Sunucu loglarına yaz
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"SUNUCU HATASI: {str(e)}")
+        return new_booking
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
 @router.get("/customer", response_model=List[BookingOut])

@@ -8,6 +8,7 @@ import 'package:mobile/auth_page.dart';
 import 'package:mobile/explore_page.dart';
 import 'package:mobile/my_bookings_page.dart';
 import 'package:mobile/resource_list_page.dart';
+import 'package:mobile/owner_bookings_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,6 +20,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _storage = const FlutterSecureStorage();
   bool _isLoggedIn = false;
+  String? _userRole;
 
   @override
   void initState() {
@@ -28,13 +30,16 @@ class _HomePageState extends State<HomePage> {
 
   void _checkLoginStatus() async {
     String? token = await _storage.read(key: 'auth_token');
+    String? role = await _storage.read(key: 'user_role');
     setState(() {
       _isLoggedIn = token != null;
+      _userRole = role;
     });
   }
 
   void _logout() async {
     await _storage.delete(key: 'auth_token');
+    await _storage.delete(key: 'user_role'); // Also clear role
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Başarıyla çıkış yapıldı.')),
@@ -90,49 +95,62 @@ class _HomePageState extends State<HomePage> {
 
                   // İçerik Alanı
                   _isLoggedIn
-                      ? GridView.count(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                          childAspectRatio: 1.1,
-                          children: [
-                            _buildMenuCard(
-                              title: 'Hizmetleri\nKeşfet',
-                              icon: Icons.search_rounded,
-                              color: Colors.deepOrangeAccent,
-                              onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const ExplorePage())),
-                            ),
-                            _buildMenuCard(
-                              title: 'Rezervasyonlarım',
-                              icon: Icons.calendar_month_rounded,
-                              color: Colors.blueAccent,
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const MyBookingsPage()));
-                              },
-                            ),
-                            _buildMenuCard(
-                              title: 'İşletme\nYönetimi',
-                              icon: Icons.store_mall_directory_rounded,
-                              color: Colors.teal,
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const ResourceListPage()));
-                              },
-                            ),
-                          ],
+                      ? Column(
+                          children: _userRole == 'BUSINESS_OWNER'
+                              ? [
+                                  // İŞLETME SAHİBİ MENÜSÜ
+                                  _buildMenuCard(
+                                    title: 'İşletme Yönetimi',
+                                    icon: Icons.store_mall_directory_rounded,
+                                    color: Colors.teal,
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const ResourceListPage()));
+                                    },
+                                  ),
+                                  const SizedBox(height: 16),
+                                  _buildMenuCard(
+                                    title: 'Gelen Talepler',
+                                    icon: Icons.notifications_active_rounded,
+                                    color: Colors.orange,
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const OwnerBookingsPage()));
+                                    },
+                                  ),
+                                ]
+                              : [
+                                  // MÜŞTERİ MENÜSÜ
+                                  _buildMenuCard(
+                                    title: 'Hizmetleri Keşfet',
+                                    icon: Icons.search_rounded,
+                                    color: Colors.deepOrangeAccent,
+                                    onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const ExplorePage())),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  _buildMenuCard(
+                                    title: 'Rezervasyonlarım',
+                                    icon: Icons.calendar_month_rounded,
+                                    color: Colors.blueAccent,
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const MyBookingsPage()));
+                                    },
+                                  ),
+                                ],
                         )
                       : _buildRoleSelectionCards(),
                 ],
@@ -301,6 +319,8 @@ class _HomePageState extends State<HomePage> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(20),

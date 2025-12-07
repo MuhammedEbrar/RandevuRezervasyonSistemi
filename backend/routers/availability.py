@@ -135,12 +135,21 @@ async def get_available_slots_for_resource(
                     if current_slot_end > slot_end: break
                     is_blocked = any(slot_start < datetime.combine(current_date_iter, block.end_time).replace(tzinfo=timezone.utc) and current_slot_end > datetime.combine(current_date_iter, block.start_time).replace(tzinfo=timezone.utc) for block in blocking_rules)
                     if not is_blocked:
-                        potential_slots[slot_start] = {"end_time": current_slot_end, "capacity_available": db_resource.capacity}
+                        # Safely handle None capacity
+                        cap = db_resource.capacity if db_resource.capacity is not None else 1
+                        potential_slots[slot_start] = {"end_time": current_slot_end, "capacity_available": cap}
                     slot_start = current_slot_end
             current_date_iter += timedelta(days=1)
         for booking in relevant_bookings:
             for slot_start, slot_data in potential_slots.items():
-                if booking.start_time < slot_data["end_time"] and booking.end_time > slot_start:
+                # slot_start is already UTC-aware from lines 132/133
+                # Ensure booking times are also UTC-aware
+                b_start = booking.start_time
+                b_end = booking.end_time
+                if b_start.tzinfo is None: b_start = b_start.replace(tzinfo=timezone.utc)
+                if b_end.tzinfo is None: b_end = b_end.replace(tzinfo=timezone.utc)
+
+                if b_start < slot_data["end_time"] and b_end > slot_start:
                     slot_data["capacity_available"] -= 1
         final_slots = []
         for slot_start, slot_data in sorted(potential_slots.items()):

@@ -7,8 +7,10 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 class ResourceService {
-  // Backend base URL (Android emulator için 10.0.2.2, Web için localhost, Gerçek Cihaz için IP)
+  // Lütfen buraya bilgisayarınızın IP adresini yazın (Örn: 192.168.1.35)
+  // Terminalde 'ipconfig' yazarak IPv4 adresinizi öğrenebilirsiniz.
   final String _baseUrl = 'http://13.60.31.19/api/v1';
+
   final _storage = const FlutterSecureStorage();
 
   // Token'ı güvenli depolamadan alır
@@ -333,11 +335,67 @@ class ResourceService {
     try {
       final response =
           await http.get(url, headers: {'Authorization': 'Bearer $token'});
-      if (response.statusCode == 200)
-        return List<dynamic>.from(json.decode(response.body));
+      if (response.statusCode == 200) {
+        // UTF-8 decode to handle special characters correctly
+        return List<dynamic>.from(json.decode(utf8.decode(response.bodyBytes)));
+      }
       return [];
     } catch (e) {
       return [];
+    }
+  }
+
+  Future<bool> updateBookingStatus(String bookingId, String status) async {
+    final token = await _getToken();
+    if (token == null) return false;
+
+    final url = Uri.parse('$_baseUrl/bookings/$bookingId/status');
+    try {
+      final response = await http.put(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode({'status': status}),
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        print(
+            'Durum güncelleme hatası: ${response.statusCode} - ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('API hatası (updateBookingStatus): $e');
+      return false;
+    }
+  }
+
+  Future<bool> cancelBooking(String bookingId) async {
+    final token = await _getToken();
+    if (token == null) return false;
+
+    final url = Uri.parse('$_baseUrl/bookings/$bookingId/cancel');
+    try {
+      final response = await http.put(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        return true;
+      } else {
+        print('İptal hatası: ${response.statusCode} - ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('API hatası (cancelBooking): $e');
+      return false;
     }
   }
 }

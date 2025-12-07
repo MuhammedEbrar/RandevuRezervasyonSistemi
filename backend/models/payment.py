@@ -1,6 +1,6 @@
 # backend/models/payment.py
-from sqlalchemy import Column, String, DateTime, ForeignKey, DECIMAL, Boolean, Enum # <-- 'Enum'u buradan import edin
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, String, DateTime, ForeignKey, DECIMAL, Boolean, Enum, Uuid # <-- 'Enum'u buradan import edin
+# from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 import uuid
@@ -12,9 +12,9 @@ from models.booking import Booking, PaymentStatus # PaymentStatus enum'ını imp
 class Payment(Base):
     __tablename__ = "payments" # Veritabanındaki tablo adı
 
-    payment_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    booking_id = Column(UUID(as_uuid=True), ForeignKey("bookings.booking_id"), nullable=False, unique=True) # Bir rezervasyona bir ödeme
-    customer_id = Column(UUID(as_uuid=True), ForeignKey("users.user_id"), nullable=False) # Ödemeyi yapan müşteri
+    payment_id = Column(Uuid, primary_key=True, default=uuid.uuid4)
+    booking_id = Column(Uuid, ForeignKey("bookings.booking_id"), nullable=False, unique=True) # Bir rezervasyona bir ödeme
+    customer_id = Column(Uuid, ForeignKey("users.user_id"), nullable=False) # Ödemeyi yapan müşteri
     amount = Column(DECIMAL(10, 2), nullable=False) # Ödenen miktar
     currency = Column(String(3), nullable=False) # Para birimi (örn: "TRY", "USD")
     status = Column(Enum(PaymentStatus), default=PaymentStatus.PENDING, nullable=False) #ödeme durumu

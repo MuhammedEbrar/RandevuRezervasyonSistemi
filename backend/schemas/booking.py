@@ -37,13 +37,27 @@ class BookingCreate(BaseModel):
     @model_validator(mode='after')
     def validate_time_range(self):
         """Bitiş zamanı başlangıç zamanından sonra olmalı ve maksimum 1 yıl olmalı"""
-        if self.end_time <= self.start_time:
+        # Normalize inputs to UTC for comparison if missing awareness
+        st = self.start_time
+        et = self.end_time
+        
+        if st.tzinfo is None:
+            st = st.replace(tzinfo=timezone.utc)
+        if et.tzinfo is None:
+            et = et.replace(tzinfo=timezone.utc)
+            
+        if et <= st:
             raise ValueError('Rezervasyon bitiş zamanı başlangıç zamanından sonra olmalıdır')
 
         # Makul bir zaman aralığı kontrolü (maksimum 1 yıl)
-        duration = self.end_time - self.start_time
+        # Fix: Use normalized st/et from above to avoid offset-naive vs aware crash
+        duration = et - st
         if duration > timedelta(days=365):
             raise ValueError('Rezervasyon süresi 1 yıldan uzun olamaz')
+
+        # Update the model instance with normalized values to ensure consistency
+        self.start_time = st
+        self.end_time = et
 
         return self
 
@@ -56,7 +70,16 @@ class BookingCalculatePriceRequest(BaseModel):
     @model_validator(mode='after')
     def validate_time_range(self):
         """Bitiş zamanı başlangıç zamanından sonra olmalı"""
-        if self.end_time <= self.start_time:
+        # Normalize inputs to UTC for comparison if missing awareness
+        st = self.start_time
+        et = self.end_time
+        
+        if st.tzinfo is None:
+            st = st.replace(tzinfo=timezone.utc)
+        if et.tzinfo is None:
+            et = et.replace(tzinfo=timezone.utc)
+            
+        if et <= st:
             raise ValueError('Bitiş zamanı başlangıç zamanından sonra olmalıdır')
         return self
 

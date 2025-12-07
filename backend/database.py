@@ -6,8 +6,17 @@ from core.settings import settings # settings objesini artık core_settings.py'd
 
 
 SQLALCHEMY_DATABASE_URL = settings.DATABASE_URL
+# LOCAL DEBUG İÇİN SQLITE KULLANIMINI ZORLUYORUZ
+# SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+# SQLite için connect_args={"check_same_thread": False} gereklidir
+connect_args = {}
+if "sqlite" in SQLALCHEMY_DATABASE_URL:
+    connect_args = {"check_same_thread": False}
+
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL, connect_args=connect_args
+)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base() # Tüm modellerimiz bu Base'den türeyecek

@@ -73,29 +73,44 @@ def get_applicable_pricing_rule(
     
     booking_start_time_only = booking_start_time.time()
 
-    query = db.query(PricingRule).filter(
+    
+    # SQLite compatibility fix: Cannot use .any() on JSON column.
+    # Fetch all active rules for this resource and filter in Python.
+    candidate_rules = db.query(PricingRule).filter(
         PricingRule.resource_id == resource_id,
         PricingRule.is_active == True,
-        # Kural ya tüm günler için geçerli olmalı, ya belirtilen günü içermeli,
-        # ya da hiç gün belirtilmemiş olmalı (bu da tüm günler anlamına gelir).
-        or_(
-            PricingRule.applicable_days == None,
-            PricingRule.applicable_days.any(ApplicableDay.ALL.value),
-            PricingRule.applicable_days.any(booking_day_of_week)
-        ),
-        # Başlangıç saati ya belirtilmemiş olmalı ya da rezervasyondan önce olmalı.
         or_(
             PricingRule.start_time_of_day.is_(None),
             PricingRule.start_time_of_day <= booking_start_time_only
         )
-    )
-    # İlk uygun kuralı döndür. Daha karmaşık senaryolar için burası geliştirilebilir.
-    return query.first()
+    ).all()
+
+    for rule in candidate_rules:
+        # Check days
+        if not rule.applicable_days: # None or empty list means ALL days
+            return rule
+        
+        # applicable_days is a list of strings (e.g. ["MONDAY", "TUESDAY"])
+        # or enum values.
+        if ApplicableDay.ALL.value in rule.applicable_days:
+            return rule
+        
+        if booking_day_of_week in rule.applicable_days:
+            return rule
+            
+    return None
 def calculate_price_from_rule(
     pricing_rule: PricingRule, start_time: datetime, end_time: datetime
 ) -> Decimal:
     """Verilen bir fiyatlandırma kuralına ve süreye göre toplam fiyatı hesaplar."""
     total_price = Decimal(0)
+    
+    # Normalize inputs to UTC for subtraction
+    if start_time.tzinfo is None:
+        start_time = start_time.replace(tzinfo=timezone.utc)
+    if end_time.tzinfo is None:
+        end_time = end_time.replace(tzinfo=timezone.utc)
+        
     duration = end_time - start_time
 
     if pricing_rule.duration_type == DurationType.FIXED_PRICE:

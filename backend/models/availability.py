@@ -1,6 +1,6 @@
 # backend/models/availability.py
-from sqlalchemy import Column, String, Boolean, DateTime, Date, Time, Enum, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, String, Boolean, DateTime, Date, Time, Enum, ForeignKey, Uuid
+# from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 import uuid
@@ -29,9 +29,9 @@ class DayOfWeek(str, enum.Enum):
 class AvailabilitySchedule(Base):
     __tablename__ = "availability_schedules"
 
-    schedule_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    resource_id = Column(UUID(as_uuid=True), ForeignKey("resources.resource_id"), nullable=False)
-    owner_id = Column(UUID(as_uuid=True), ForeignKey("users.user_id"), nullable=False)
+    schedule_id = Column(Uuid, primary_key=True, default=uuid.uuid4)
+    resource_id = Column(Uuid, ForeignKey("resources.resource_id"), nullable=False)
+    owner_id = Column(Uuid, ForeignKey("users.user_id"), nullable=False)
     day_of_week = Column(Enum(DayOfWeek), nullable=True)
     specific_date = Column(Date, nullable=True)
     start_time = Column(Time, nullable=False)

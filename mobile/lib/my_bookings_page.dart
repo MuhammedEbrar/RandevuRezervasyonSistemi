@@ -86,25 +86,94 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                 margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                child: ListTile(
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  leading: Icon(Icons.event_available,
-                      color: _getStatusColor(status), size: 40),
-                  title: Text(
-                    resourceName,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text(
-                    'Tarih: ${_formatDate(booking['start_time'])}\nDurum: ${status ?? 'Belirsiz'}',
-                  ),
-                  trailing: Text(
-                    '${booking['total_price']} TL',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: Colors.teal),
-                  ),
+                child: Column(
+                  children: [
+                    ListTile(
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      leading: Icon(Icons.event_available,
+                          color: _getStatusColor(status), size: 40),
+                      title: Text(
+                        resourceName,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        'Tarih: ${_formatDate(booking['start_time'])}\nDurum: ${status ?? 'Belirsiz'}',
+                      ),
+                      trailing: Text(
+                        '${booking['total_price']} TL',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.teal),
+                      ),
+                    ),
+                    if (status == 'CONFIRMED' || status == 'PENDING')
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: OutlinedButton.icon(
+                            onPressed: () async {
+                              // Onay penceresi
+                              final confirm = await showDialog<bool>(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text('Rezervasyonu İptal Et'),
+                                  content: const Text(
+                                      'Bu rezervasyonu iptal etmek istediğinize emin misiniz?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, false),
+                                      child: const Text('Hayır'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, true),
+                                      child: const Text('Evet, İptal Et',
+                                          style: TextStyle(color: Colors.red)),
+                                    ),
+                                  ],
+                                ),
+                              );
+
+                              if (confirm == true) {
+                                final success = await _resourceService
+                                    .cancelBooking(booking['booking_id']);
+                                if (success) {
+                                  if (mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text(
+                                                'Rezervasyon iptal edildi.')));
+                                    setState(() {
+                                      _myBookingsFuture =
+                                          _resourceService.getMyBookings();
+                                    });
+                                  }
+                                } else {
+                                  if (mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text(
+                                                'İptal işlemi başarısız.')));
+                                  }
+                                }
+                              }
+                            },
+                            icon: const Icon(Icons.cancel_outlined,
+                                color: Colors.red),
+                            label: const Text('İptal Et',
+                                style: TextStyle(color: Colors.red)),
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(color: Colors.red),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               );
             },

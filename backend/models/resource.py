@@ -1,6 +1,6 @@
 # backend/models/resource.py
-from sqlalchemy import Column, String, Integer, Boolean, DateTime, Enum, Text, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID, JSONB, ARRAY
+from sqlalchemy import Column, String, Integer, Boolean, DateTime, Enum, Text, ForeignKey, Uuid, JSON
+# from sqlalchemy.dialects.postgresql import UUID, JSONB, ARRAY # PostgreSQL specific types removed for SQLite compatibility
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 import uuid
@@ -19,16 +19,16 @@ class BookingType(str, enum.Enum):
 class Resource(Base):
     __tablename__ = "resources"
 
-    resource_id = Column(UUID(as_uuid=True), primary_key = True, default=uuid.uuid4)
-    owner_id = Column(UUID(as_uuid=True), ForeignKey("users.user_id"), nullable=False)
+    resource_id = Column(Uuid, primary_key = True, default=uuid.uuid4)
+    owner_id = Column(Uuid, ForeignKey("users.user_id"), nullable=False)
     name = Column(String, index=True, nullable=False)
     description = Column(String, nullable=True)
     type = Column(Enum(ResourceType), nullable=False)
     capacity = Column(Integer, nullable=True)
-    location = Column(JSONB, nullable=True)
+    location = Column(JSON, nullable=True)
     is_active = Column(Boolean, default=False)
-    tags = Column(ARRAY(Text), nullable=True)
-    images = Column(ARRAY(Text), nullable=True)
+    tags = Column(JSON, nullable=True)
+    images = Column(JSON, nullable=True)
     cancellation_policy = Column(String, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
